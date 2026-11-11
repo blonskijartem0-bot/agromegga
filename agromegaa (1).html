@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://accounts.google.com https://appleid.cdn-apple.com; style-src 'unsafe-inline' https://accounts.google.com; img-src data: https:; frame-src https://accounts.google.com https://appleid.apple.com; connect-src https://accounts.google.com https://appleid.apple.com; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<title>agromegaa</title>
+<style>
+:root{--bg:#0a0a0b;--bg2:#121214;--bg3:#1a1a1d;--line:#2a2a2f;--red:#e11d2e;--red2:#ff3b4d;--dark-red:#7a0f19;--tx:#f4f4f5;--mut:#9a9aa3}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+body{background:radial-gradient(1200px 600px at 80% -10%,rgba(225,29,46,.18),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(225,29,46,.10),transparent 60%),var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+.hidden{display:none!important}
+.logo{font-weight:900;letter-spacing:.18em;text-transform:uppercase;font-size:20px}
+.logo b{color:var(--red)}
+.btn{background:var(--bg3);border:1px solid var(--line);border-radius:10px;padding:10px 16px;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--red);box-shadow:0 0 0 3px rgba(225,29,46,.15)}
+.btn.primary{background:linear-gradient(135deg,var(--red),var(--dark-red));border-color:transparent;font-weight:700}
+.btn.primary:hover{filter:brightness(1.15)}
+.btn.sm{padding:6px 10px;font-size:13px}
+.btn.danger{color:var(--red2)}
+input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--red)}
+label{display:block;font-size:12px;color:var(--mut);margin:12px 0 5px;text-transform:uppercase;letter-spacing:.08em}
+/* auth */
+.center{min-height:100%;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{width:100%;max-width:420px;background:linear-gradient(180deg,var(--bg2),var(--bg));border:1px solid var(--line);border-radius:18px;padding:30px;box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 80px rgba(225,29,46,.08)}
+.card h1{margin:0 0 6px;font-size:26px}
+.card p{color:var(--mut);margin:0 0 20px;font-size:14px;line-height:1.5}
+.sso{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-bottom:10px;padding:12px;font-weight:600}
+.sso svg{width:18px;height:18px}
+.sep{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:12px;margin:16px 0}
+.sep:before,.sep:after{content:"";flex:1;height:1px;background:var(--line)}
+.err{color:var(--red2);font-size:13px;min-height:18px;margin-top:10px}
+.note{font-size:12px;color:var(--mut);margin-top:14px;line-height:1.5}
+#gbtn{display:flex;justify-content:center;margin-bottom:10px}
+/* app */
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid var(--line);background:rgba(10,10,11,.8);backdrop-filter:blur(8px);position:sticky;top:0;z-index:5}
+.hr{display:flex;gap:10px;align-items:center}
+.chip{font-size:13px;color:var(--mut);padding:6px 12px;border:1px solid var(--line);border-radius:99px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layout{display:grid;grid-template-columns:360px 1fr;height:calc(100vh - 62px)}
+aside{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:var(--bg2)}
+.side-top{padding:14px;display:flex;flex-direction:column;gap:10px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{padding:5px 11px;border-radius:99px;border:1px solid var(--line);background:none;cursor:pointer;font-size:13px;color:var(--mut)}
+.tab.on{background:var(--red);border-color:var(--red);color:#fff}
+.list{overflow:auto;padding:0 10px 14px;flex:1}
+.item{display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;cursor:pointer;border:1px solid transparent;margin-bottom:4px}
+.item:hover{background:var(--bg3)}
+.item.on{background:var(--bg3);border-color:var(--red);box-shadow:inset 3px 0 0 var(--red)}
+.badge{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-weight:800;font-size:13px;flex:none;background:var(--bg);border:1px solid var(--line)}
+.badge.tiktok{color:#fff;box-shadow:inset 0 0 0 1px #25f4ee,2px 2px 0 #fe2c55}
+.badge.instagram{background:linear-gradient(45deg,#7a0f19,#e11d2e 60%,#ff7a5c);color:#fff;border:none}
+.badge.youtube{background:var(--red);color:#fff;border:none}
+.meta{min-width:0}
+.meta .n{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta .e{font-size:12.5px;color:var(--red2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+main{overflow:auto;padding:30px}
+.empty{height:100%;display:grid;place-items:center;text-align:center;color:var(--mut)}
+.detail{max-width:620px}
+.dhead{display:flex;gap:16px;align-items:center;margin-bottom:24px}
+.dhead .badge{width:62px;height:62px;font-size:18px;border-radius:16px}
+.dhead h2{margin:0;font-size:24px}
+.dhead span{color:var(--mut);font-size:14px;text-transform:capitalize}
+.row{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.row .k{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+.row .v{margin-top:3px;word-break:break-all;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px}
+.actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;padding:20px;z-index:20}
+.modal .card{max-height:92vh;overflow:auto}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--red);padding:10px 18px;border-radius:10px;font-weight:600;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+@media(max-width:800px){.layout{grid-template-columns:1fr;height:auto}aside{border-right:none;border-bottom:1px solid var(--line);max-height:50vh}main{padding:18px}.chip{display:none}}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<section id="auth" class="center">
+  <div class="card">
+    <div class="logo" style="margin-bottom:18px">agro<b>megaa</b></div>
+    <h1>Вхід</h1>
+    <p>Усі твої акаунти TikTok, Instagram і YouTube в одному захищеному місці. Кожен користувач бачить лише своє сховище.</p>
+    <div id="gbtn"></div>
+    <button class="btn sso" id="googleFallback"><svg viewBox="0 0 24 24"><path fill="#fff" d="M21.35 11.1H12v2.9h5.35c-.5 2.4-2.5 3.5-5.35 3.5a6 6 0 1 1 0-12c1.5 0 2.8.5 3.8 1.4l2.1-2.1A9 9 0 1 0 12 21c5.2 0 8.6-3.6 8.6-8.8 0-.4 0-.8-.1-1.1z"/></svg>Увійти через Google</button>
+    <button class="btn sso" id="appleBtn"><svg viewBox="0 0 24 24"><path fill="#fff" d="M16.4 12.6c0-2.5 2-3.7 2.1-3.8-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.600 3.200 2.600 1.300-.1 1.800-.8 3.300-.8s2 .8 3.300.8 2.200-1.200 3-2.400c1-1.400 1.400-2.700 1.400-2.800-.1 0-2.700-1-2.700-4.300zM14 5.200c.7-.8 1.100-2 1-3.200-1 0-2.200.7-2.900 1.500-.6.700-1.200 1.900-1 3.100 1.100.1 2.200-.600 2.900-1.400z"/></svg>Увійти через Apple / iCloud</button>
+    <div class="sep" id="demoSep">або демо-режим</div>
+    <div id="demoBox">
+      <label>Пошта (локальний профіль)</label>
+      <input id="demoEmail" type="email" placeholder="you@example.com" autocomplete="email">
+      <button class="btn primary" style="width:100%;margin-top:12px" id="demoBtn">Продовжити</button>
+    </div>
+    <div class="err" id="authErr"></div>
+    <div class="note" id="authNote"></div>
+  </div>
+</section>
+
+<!-- VAULT UNLOCK -->
+<section id="unlock" class="center hidden">
+  <div class="card">
+    <div class="logo" style="margin-bottom:18px">agro<b>megaa</b></div>
+    <h1 id="ulTitle">Майстер-пароль</h1>
+    <p id="ulText"></p>
+    <label>Майстер-пароль</label>
+    <input id="mp1" type="password" autocomplete="off">
+    <div id="mp2wrap"><label>Повтори пароль</label><input id="mp2" type="password" autocomplete="off"></div>
+    <button class="btn primary" style="width:100%;margin-top:16px" id="ulBtn">Продовжити</button>
+    <button class="btn" style="width:100%;margin-top:8px" id="ulOut">Вийти</button>
+    <div class="err" id="ulErr"></div>
+    <div class="note">Майстер-пароль нікуди не надсилається й не зберігається. Без нього відновити дані неможливо.</div>
+  </div>
+</section>
+
+<!-- APP -->
+<section id="app" class="hidden">
+  <header>
+    <div class="logo">agro<b>megaa</b></div>
+    <div class="hr">
+      <span class="chip" id="who"></span>
+      <button class="btn sm" id="lockBtn">🔒 Заблокувати</button>
+      <button class="btn sm" id="outBtn">Вийти</button>
+    </div>
+  </header>
+  <div class="layout">
+    <aside>
+      <div class="side-top">
+        <input id="q" placeholder="Пошук за іменем або поштою…">
+        <div class="tabs" id="tabs"></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn primary" style="flex:1" id="addBtn">+ Додати акаунт</button>
+          <button class="btn" id="impBtn" title="Імпорт JSON / CSV">⬆</button>
+          <button class="btn" id="expBtn" title="Зашифрована резервна копія">⬇</button>
+        </div>
+        <input type="file" id="file" class="hidden" accept=".json,.csv,.txt">
+      </div>
+      <div class="list" id="list"></div>
+    </aside>
+    <main id="main"></main>
+  </div>
+</section>
+
+<div id="modalRoot"></div>
+
+<script>
+'use strict';
+/* ===== НАЛАШТУВАННЯ (заповни для реального входу) =====
+   GOOGLE_CLIENT_ID — з Google Cloud Console (OAuth Web client)
+   APPLE_CLIENT_ID  — Services ID з Apple Developer
+   APPLE_REDIRECT   — URL твого сайту, доданий в Apple та Google як дозволений
+   Доти працює демо-режим (локальний профіль за поштою). */
+const CFG={GOOGLE_CLIENT_ID:'657778652488-dhmgc0hlrifuer396rgtjlh59oedhj8c.apps.googleusercontent.com',APPLE_CLIENT_ID:'',APPLE_REDIRECT:location.origin+location.pathname};
+const AUTO_LOCK_MS=5*60*1000, PBKDF_ITER=600000, CLIP_MS=20000;
+const PLAT={
+  tiktok:{name:'TikTok',tag:'TT',url:'https://www.tiktok.com/login'},
+  instagram:{name:'Instagram',tag:'IG',url:'https://www.instagram.com/accounts/login/'},
+  youtube:{name:'YouTube',tag:'YT',url:'https://www.youtube.com/'}
+};
+const $=id=>document.getElementById(id);
+const S={user:null,key:null,salt:null,accounts:[],sel:null,filter:'all',search:'',fails:0,lockTimer:null};
+
+function h(tag,attrs,...kids){const e=document.createElement(tag);for(const k in(attrs||{})){if(k==='class')e.className=attrs[k];else if(k.startsWith('on'))e.addEventListener(k.slice(2),attrs[k]);else e.setAttribute(k,attrs[k])}kids.flat().forEach(c=>e.append(c instanceof Node?c:document.createTextNode(c??'')));return e}
+function toast(t){const d=h('div',{class:'toast'},t);document.body.append(d);setTimeout(()=>d.remove(),2200)}
+function show(id){['auth','unlock','app'].forEach(s=>$(s).classList.toggle('hidden',s!==id))}
+
+/* ===== КРИПТО ===== */
+const enc=new TextEncoder(),dec=new TextDecoder();
+const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b)));
+const unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function deriveKey(pw,salt){
+  const base=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:PBKDF_ITER,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function seal(){
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},S.key,enc.encode(JSON.stringify(S.accounts)));
+  localStorage.setItem(vaultKey(),JSON.stringify({v:1,salt:b64(S.salt),iv:b64(iv),data:b64(ct)}));
+}
+async function openVault(pw,rec){
+  const salt=unb64(rec.salt),key=await deriveKey(pw,salt);
+  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(rec.iv)},key,unb64(rec.data));
+  S.key=key;S.salt=salt;S.accounts=JSON.parse(dec.decode(pt));
+}
+// Сховище прив'язане до користувача (провайдер + унікальний id): інший користувач не бачить чужих даних
+const vaultKey=()=>'agromegaa:vault:'+S.user.provider+':'+S.user.sub;
+
+/* ===== ВХІД ===== */
+function jwt(t){const p=t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');return JSON.parse(decodeURIComponent(atob(p).split('').map(c=>'%'+c.charCodeAt(0).toString(16).padStart(2,'0')).join('')))}
+function loginAs(u){sessionStorage.setItem('agro:user',JSON.stringify(u));S.user=u;goUnlock()}
+function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.async=true;s.onload=ok;s.onerror=no;document.head.append(s)})}
+
+async function initAuth(){
+  const hasG=!!CFG.GOOGLE_CLIENT_ID,hasA=!!CFG.APPLE_CLIENT_ID;
+  $('authNote').textContent=(hasG&&hasA)?'':'Google/Apple-вхід вимкнено, доки не вказано ключі в CFG на початку скрипта. Поки що доступний демо-режим.';
+  $('gbtn').classList.toggle('hidden',!hasG);
+  $('googleFallback').classList.toggle('hidden',hasG);
+  if(hasG){
+    try{
+      await loadScript('https://accounts.google.com/gsi/client');
+      google.accounts.id.initialize({client_id:CFG.GOOGLE_CLIENT_ID,callback:r=>{
+        try{const p=jwt(r.credential);if(p.aud!==CFG.GOOGLE_CLIENT_ID)throw 0;loginAs({provider:'google',sub:p.sub,email:p.email,name:p.name||p.email})}catch{$('authErr').textContent='Помилка входу через Google'}
+      }});
+      google.accounts.id.renderButton($('gbtn'),{theme:'filled_black',size:'large',text:'signin_with',width:340});
+    }catch{$('authErr').textContent='Не вдалося завантажити Google'}
+  }
+  $('googleFallback').onclick=()=>$('authErr').textContent='Вкажи GOOGLE_CLIENT_ID у налаштуваннях, щоб увімкнути Google-вхід.';
+  $('appleBtn').onclick=async()=>{
+    if(!hasA){$('authErr').textContent='Вкажи APPLE_CLIENT_ID у налаштуваннях, щоб увімкнути Apple-вхід.';return}
+    try{
+      if(!window.AppleID)await loadScript('https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js');
+      AppleID.auth.init({clientId:CFG.APPLE_CLIENT_ID,scope:'name email',redirectURI:CFG.APPLE_REDIRECT,usePopup:true});
+      const r=await AppleID.auth.signIn();const p=jwt(r.authorization.id_token);
+      loginAs({provider:'apple',sub:p.sub,email:p.email||'apple-user',name:p.email||'Apple user'});
+    }catch{$('authErr').textContent='Вхід через Apple скасовано або не вдався'}
+  };
+  $('demoBtn').onclick=()=>{
+    const e=$('demoEmail').value.trim().toLowerCase();
+    if(!/^\S+@\S+\.\S+$/.test(e)){$('authErr').textContent='Введи коректну пошту';return}
+    loginAs({provider:'demo',sub:e,email:e,name:e});
+  };
+}
+
+/* ===== РОЗБЛОКУВАННЯ ===== */
+function goUnlock(){
+  S.key=null;S.accounts=[];S.fails=0;
+  const has=!!localStorage.getItem(vaultKey());
+  $('ulTitle').textContent=has?'Розблокуй сховище':'Створи майстер-пароль';
+  $('ulText').textContent=(has?'Привіт, ':'Вітаємо, ')+S.user.email+(has?'. Введи майстер-пароль.':'. Цей пароль шифрує всі твої акаунти. Мінімум 10 символів.');
+  $('mp2wrap').classList.toggle('hidden',has);
+  $('mp1').value='';$('mp2').value='';$('ulErr').textContent='';
+  show('unlock');$('mp1').focus();
+}
+$('ulBtn').onclick=async()=>{
+  const pw=$('mp1').value,rec=localStorage.getItem(vaultKey());
+  $('ulErr').textContent='';
+  if(rec){
+    try{await openVault(pw,JSON.parse(rec));startApp()}
+    catch{S.fails++;const w=Math.min(2**S.fails,60);$('ulErr').textContent='Невірний пароль. Зачекай '+w+' с.';$('ulBtn').disabled=true;setTimeout(()=>$('ulBtn').disabled=false,w*1000)}
+  }else{
+    if(pw.length<10){$('ulErr').textContent='Мінімум 10 символів';return}
+    if(pw!==$('mp2').value){$('ulErr').textContent='Паролі не збігаються';return}
+    S.salt=crypto.getRandomValues(new Uint8Array(16));S.key=await deriveKey(pw,S.salt);S.accounts=[];await seal();startApp();
+  }
+  $('mp1').value='';$('mp2').value='';
+};
+$('mp1').addEventListener('keydown',e=>{if(e.key==='Enter')$('ulBtn').click()});
+$('mp2').addEventListener('keydown',e=>{if(e.key==='Enter')$('ulBtn').click()});
+$('ulOut').onclick=logout;
+
+function logout(){sessionStorage.removeItem('agro:user');S.user=null;S.key=null;S.accounts=[];S.sel=null;clearTimeout(S.lockTimer);$('main').replaceChildren();show('auth')}
+function lock(){S.key=null;S.accounts=[];S.sel=null;clearTimeout(S.lockTimer);$('main').replaceChildren();$('list').replaceChildren();goUnlock()}
+function bump(){clearTimeout(S.lockTimer);if(S.key)S.lockTimer=setTimeout(()=>{lock();toast('Автоблокування')},AUTO_LOCK_MS)}
+['click','keydown','mousemove','touchstart'].forEach(ev=>document.addEventListener(ev,bump,{passive:true}));
+$('lockBtn').onclick=lock;$('outBtn').onclick=logout;
+
+/* ===== ДОДАТОК ===== */
+function startApp(){$('who').textContent=S.user.email+' ('+S.user.provider+')';S.sel=null;show('app');renderTabs();render();bump()}
+function renderTabs(){
+  const t=$('tabs');t.replaceChildren();
+  [['all','Усі'],...Object.entries(PLAT).map(([k,v])=>[k,v.name])].forEach(([k,n])=>{
+    const cnt=k==='all'?S.accounts.length:S.accounts.filter(a=>a.platform===k).length;
+    t.append(h('button',{class:'tab'+(S.filter===k?' on':''),onclick:()=>{S.filter=k;renderTabs();render()}},n+' '+cnt));
+  });
+}
+function render(){
+  const l=$('list');l.replaceChildren();
+  const q=S.search.toLowerCase();
+  const items=S.accounts.filter(a=>(S.filter==='all'||a.platform===S.filter)&&(!q||a.username.toLowerCase().includes(q)||a.email.toLowerCase().includes(q)));
+  if(!items.length)l.append(h('div',{class:'note',style:'padding:16px;text-align:center'},'Акаунтів немає'));
+  items.forEach(a=>l.append(h('div',{class:'item'+(a.id===S.sel?' on':''),onclick:()=>{S.sel=a.id;render()}},
+    h('div',{class:'badge '+a.platform},PLAT[a.platform].tag),
+    h('div',{class:'meta'},h('div',{class:'n'},a.username),h('div',{class:'e'},a.email)))));
+  renderDetail();
+}
+$('q').oninput=e=>{S.search=e.target.value;render()};
+
+function copy(text,label){
+  navigator.clipboard.writeText(text).then(()=>{toast(label+' скопійовано'+(label==='Пароль'?' (очиститься через 20 с)':''));
+    if(label==='Пароль')setTimeout(()=>navigator.clipboard.writeText(' ').catch(()=>{}),CLIP_MS)}).catch(()=>toast('Не вдалося скопіювати'));
+}
+function renderDetail(){
+  const m=$('main');m.replaceChildren();
+  const a=S.accounts.find(x=>x.id===S.sel);
+  if(!a){m.append(h('div',{class:'empty'},h('div',{},h('div',{style:'font-size:44px;color:var(--red)'},'◆'),h('p',{},'Обери акаунт зі списку або додай новий'))));return}
+  let shown=false;
+  const pv=h('div',{class:'v'},'••••••••••');
+  const row=(k,vEl,btns)=>h('div',{class:'row'},h('div',{},h('div',{class:'k'},k),vEl),h('div',{style:'display:flex;gap:6px'},btns));
+  m.append(h('div',{class:'detail'},
+    h('div',{class:'dhead'},h('div',{class:'badge '+a.platform},PLAT[a.platform].tag),h('div',{},h('h2',{},a.username),h('span',{},PLAT[a.platform].name))),
+    row('Прив\'язана пошта',h('div',{class:'v',style:'color:var(--red2)'},a.email),[h('button',{class:'btn sm',onclick:()=>copy(a.email,'Пошту')},'Копіювати')]),
+    row('Пароль',pv,[
+      h('button',{class:'btn sm',onclick:e=>{shown=!shown;pv.textContent=shown?a.password:'••••••••••';e.target.textContent=shown?'Сховати':'Показати'}},'Показати'),
+      h('button',{class:'btn sm',onclick:()=>copy(a.password,'Пароль')},'Копіювати')]),
+    a.notes?row('Нотатки',h('div',{class:'v',style:'white-space:pre-wrap'},a.notes),[]):'',
+    h('div',{class:'actions'},
+      h('button',{class:'btn primary',onclick:()=>{copy(a.password,'Пароль');window.open(PLAT[a.platform].url,'_blank','noopener,noreferrer')}},'Відкрити '+PLAT[a.platform].name+' ↗'),
+      h('button',{class:'btn',onclick:()=>form(a)},'Редагувати'),
+      h('button',{class:'btn danger',onclick:async()=>{if(confirm('Видалити акаунт '+a.username+'?')){S.accounts=S.accounts.filter(x=>x.id!==a.id);S.sel=null;await seal();renderTabs();render()}}},'Видалити')),
+    h('div',{class:'note'},'Кнопка «Відкрити» копіює пароль і відкриває сторінку входу платформи в новій вкладці: самі платформи забороняють вбудовувати свої сторінки.')));
+}
+
+/* ===== ФОРМА ===== */
+function form(a){
+  const root=$('modalRoot');
+  const sel=h('select',{});Object.entries(PLAT).forEach(([k,v])=>{const o=h('option',{value:k},v.name);if(a&&a.platform===k)o.selected=true;sel.append(o)});
+  const user=h('input',{placeholder:'@username',value:a?.username||''});
+  const mail=h('input',{type:'email',placeholder:'пошта акаунта',value:a?.email||''});
+  const pass=h('input',{type:'password',autocomplete:'off',value:a?.password||''});
+  const notes=h('textarea',{rows:'3'},a?.notes||'');
+  const err=h('div',{class:'err'});
+  const close=()=>root.replaceChildren();
+  root.append(h('div',{class:'modal',onclick:e=>{if(e.target.classList.contains('modal'))close()}},h('div',{class:'card'},
+    h('h1',{},a?'Редагувати акаунт':'Новий акаунт'),
+    h('label',{},'Платформа'),sel,h('label',{},'Імʼя акаунта'),user,h('label',{},'Пошта'),mail,h('label',{},'Пароль'),pass,h('label',{},'Нотатки'),notes,err,
+    h('div',{class:'actions'},
+      h('button',{class:'btn primary',onclick:async()=>{
+        if(!user.value.trim()||!/^\S+@\S+\.\S+$/.test(mail.value.trim())){err.textContent='Вкажи імʼя та коректну пошту';return}
+        const rec={id:a?.id||crypto.randomUUID(),platform:sel.value,username:user.value.trim(),email:mail.value.trim(),password:pass.value,notes:notes.value.trim()};
+        if(a)S.accounts[S.accounts.findIndex(x=>x.id===a.id)]=rec;else S.accounts.push(rec);
+        S.sel=rec.id;await seal();close();renderTabs();render();
+      }},'Зберегти'),
+      h('button',{class:'btn',onclick:close},'Скасувати')))));
+  user.focus();
+}
+$('addBtn').onclick=()=>form(null);
+
+/* ===== ІМПОРТ / ЕКСПОРТ ===== */
+$('impBtn').onclick=()=>$('file').click();
+$('file').onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;e.target.value='';
+  try{
+    const txt=await f.text();let rows=[];
+    if(f.name.endsWith('.json')){
+      const j=JSON.parse(txt);
+      if(j.salt&&j.iv&&j.data){ // зашифрована резервна копія
+        const pw=prompt('Майстер-пароль цієї резервної копії:');if(!pw)return;
+        const salt=unb64(j.salt),key=await deriveKey(pw,salt);
+        rows=JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(j.iv)},key,unb64(j.data))));
+      }else rows=Array.isArray(j)?j:[];
+    }else{
+      rows=txt.split(/\r?\n/).filter(Boolean).map(l=>{const c=l.split(',').map(s=>s.trim());return{platform:c[0],username:c[1],email:c[2],password:c[3],notes:c[4]||''}});
+    }
+    let n=0;
+    rows.forEach(r=>{const p=String(r.platform||'').toLowerCase();if(!PLAT[p]||!r.username||!r.email)return;
+      S.accounts.push({id:crypto.randomUUID(),platform:p,username:String(r.username),email:String(r.email),password:String(r.password||''),notes:String(r.notes||'')});n++});
+    await seal();renderTabs();render();toast('Імпортовано: '+n);
+  }catch{toast('Не вдалося прочитати файл')}
+};
+$('expBtn').onclick=()=>{
+  const rec=localStorage.getItem(vaultKey());if(!rec)return;
+  const a=h('a',{href:URL.createObjectURL(new Blob([rec],{type:'application/json'})),download:'agromegaa-backup.json'});
+  document.body.append(a);a.click();a.remove();toast('Зашифровану копію збережено');
+};
+
+/* ===== СТАРТ ===== */
+(async()=>{
+  await initAuth();
+  const u=sessionStorage.getItem('agro:user');
+  if(u){try{S.user=JSON.parse(u);goUnlock();return}catch{}}
+  show('auth');
+})();
+</script>
+</body>
+</html>
