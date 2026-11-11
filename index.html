@@ -90,6 +90,7 @@ main{overflow:auto;padding:30px}
       <label>Пошта (локальний профіль)</label>
       <input id="demoEmail" type="email" placeholder="you@example.com" autocomplete="email">
       <button class="btn primary" style="width:100%;margin-top:12px" id="demoBtn">Продовжити</button>
+      <button class="btn" style="width:100%;margin-top:8px" id="demoLogin">Увійти</button>
     </div>
     <div class="err" id="authErr"></div>
     <div class="note" id="authNote"></div>
@@ -102,10 +103,18 @@ main{overflow:auto;padding:30px}
     <div class="logo" style="margin-bottom:18px">agro<b>megaa</b></div>
     <h1 id="ulTitle">Майстер-пароль</h1>
     <p id="ulText"></p>
-    <label>Майстер-пароль</label>
-    <input id="mp1" type="password" autocomplete="off">
-    <div id="mp2wrap"><label>Повтори пароль</label><input id="mp2" type="password" autocomplete="off"></div>
-    <button class="btn primary" style="width:100%;margin-top:16px" id="ulBtn">Продовжити</button>
+    <div id="ulMain">
+      <label>Майстер-пароль</label>
+      <input id="mp1" type="password" autocomplete="off">
+      <div id="mp2wrap"><label>Повтори пароль</label><input id="mp2" type="password" autocomplete="off"></div>
+      <button class="btn primary" style="width:100%;margin-top:16px" id="ulBtn">Продовжити</button>
+      <button class="btn" style="width:100%;margin-top:8px" id="ulLogin">Вже маю обліковий запис — Увійти</button>
+    </div>
+    <div id="ulMissing" class="hidden">
+      <button class="btn primary" style="width:100%" id="ulRestore">Відновити з резервної копії</button>
+      <button class="btn" style="width:100%;margin-top:8px" id="ulCreate">Створити новий обліковий запис</button>
+      <input type="file" id="ulFile" class="hidden" accept=".json">
+    </div>
     <button class="btn" style="width:100%;margin-top:8px" id="ulOut">Вийти</button>
     <div class="err" id="ulErr"></div>
     <div class="note">Майстер-пароль нікуди не надсилається й не зберігається. Без нього відновити дані неможливо.</div>
@@ -186,7 +195,7 @@ const vaultKey=()=>'agromegaa:vault:'+S.user.provider+':'+S.user.sub;
 
 /* ===== ВХІД ===== */
 function jwt(t){const p=t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');return JSON.parse(decodeURIComponent(atob(p).split('').map(c=>'%'+c.charCodeAt(0).toString(16).padStart(2,'0')).join('')))}
-function loginAs(u){sessionStorage.setItem('agro:user',JSON.stringify(u));S.user=u;goUnlock()}
+function loginAs(u,login){sessionStorage.setItem('agro:user',JSON.stringify(u));S.user=u;goUnlock(login)}
 function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.async=true;s.onload=ok;s.onerror=no;document.head.append(s)})}
 
 async function initAuth(){
@@ -213,23 +222,46 @@ async function initAuth(){
       loginAs({provider:'apple',sub:p.sub,email:p.email||'apple-user',name:p.email||'Apple user'});
     }catch{$('authErr').textContent='Вхід через Apple скасовано або не вдався'}
   };
-  $('demoBtn').onclick=()=>{
+  $('demoBtn').onclick=()=>demoGo(false);
+  $('demoLogin').onclick=()=>demoGo(true);
+  function demoGo(login){
     const e=$('demoEmail').value.trim().toLowerCase();
     if(!/^\S+@\S+\.\S+$/.test(e)){$('authErr').textContent='Введи коректну пошту';return}
-    loginAs({provider:'demo',sub:e,email:e,name:e});
-  };
+    loginAs({provider:'demo',sub:e,email:e,name:e},login);
+  }
 }
 
 /* ===== РОЗБЛОКУВАННЯ ===== */
-function goUnlock(){
+function goUnlock(login){
   S.key=null;S.accounts=[];S.fails=0;
   const has=!!localStorage.getItem(vaultKey());
-  $('ulTitle').textContent=has?'Розблокуй сховище':'Створи майстер-пароль';
-  $('ulText').textContent=(has?'Привіт, ':'Вітаємо, ')+S.user.email+(has?'. Введи майстер-пароль.':'. Цей пароль шифрує всі твої акаунти. Мінімум 10 символів.');
+  const missing=login===true&&!has;
+  $('ulMain').classList.toggle('hidden',missing);
+  $('ulMissing').classList.toggle('hidden',!missing);
+  $('ulLogin').classList.toggle('hidden',has);
+  if(missing){
+    $('ulTitle').textContent='Обліковий запис не знайдено';
+    $('ulText').textContent='Для '+S.user.email+' на цьому пристрої немає збереженого сховища: дані зберігаються лише в браузері, де ти реєструвався. Якщо акаунт створено деінде, імпортуй зашифровану резервну копію (кнопка ⬇ у додатку) — або створи новий.';
+  }else{
+    $('ulTitle').textContent=has?'Розблокуй сховище':'Створи майстер-пароль';
+    $('ulText').textContent=(has?'Привіт, ':'Вітаємо, ')+S.user.email+(has?'. Введи майстер-пароль.':'. Цей пароль шифрує всі твої акаунти. Мінімум 10 символів.');
+  }
   $('mp2wrap').classList.toggle('hidden',has);
   $('mp1').value='';$('mp2').value='';$('ulErr').textContent='';
-  show('unlock');$('mp1').focus();
+  show('unlock');if(!missing)$('mp1').focus();
 }
+$('ulLogin').onclick=()=>goUnlock(true);
+$('ulCreate').onclick=()=>goUnlock(false);
+$('ulRestore').onclick=()=>$('ulFile').click();
+$('ulFile').onchange=async e=>{
+  const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{
+    const j=JSON.parse(await f.text());
+    if(!(typeof j.salt==='string'&&typeof j.iv==='string'&&typeof j.data==='string'))throw 0;
+    localStorage.setItem(vaultKey(),JSON.stringify({v:1,salt:j.salt,iv:j.iv,data:j.data}));
+    goUnlock(true);
+  }catch{$('ulErr').textContent='Це не схоже на резервну копію сховища'}
+};
 $('ulBtn').onclick=async()=>{
   const pw=$('mp1').value,rec=localStorage.getItem(vaultKey());
   $('ulErr').textContent='';
