@@ -35,8 +35,8 @@ label{display:block;font-size:12px;color:var(--mut);margin:12px 0 5px;text-trans
 .err{color:var(--red2);font-size:13px;min-height:18px;margin-top:10px}
 .note{font-size:12px;color:var(--mut);margin-top:14px;line-height:1.5}
 #gbtn{display:flex;justify-content:center;margin-bottom:10px;min-height:44px}
-details.demo{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
-details.demo summary{cursor:pointer;color:var(--mut);font-size:13px}
+.sep{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:12px;margin:16px 0}
+.sep:before,.sep:after{content:"";flex:1;height:1px;background:var(--line)}
 /* app */
 header{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid var(--line);background:rgba(10,10,11,.8);backdrop-filter:blur(8px);position:sticky;top:0;z-index:5}
 .hr{display:flex;gap:10px;align-items:center}
@@ -55,6 +55,7 @@ aside{border-right:1px solid var(--line);display:flex;flex-direction:column;min-
 .badge.tiktok{color:#fff;box-shadow:inset 0 0 0 1px #25f4ee,2px 2px 0 #fe2c55}
 .badge.instagram{background:linear-gradient(45deg,#7a0f19,#e11d2e 60%,#ff7a5c);color:#fff;border:none}
 .badge.youtube{background:var(--red);color:#fff;border:none}
+.badge.twitter{background:#000;color:#fff;border:1px solid #6b6b73;font-size:16px}
 .meta{min-width:0;flex:1}
 .meta .n{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .meta .e{font-size:12.5px;color:var(--red2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -159,19 +160,16 @@ textarea.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
   <div class="card">
     <div class="logo" style="margin-bottom:18px">agro<b>megaa</b></div>
     <h1>Вхід</h1>
-    <p>Усі твої акаунти TikTok, Instagram і YouTube в одному захищеному місці. Кожен користувач бачить лише своє сховище.</p>
+    <p>Усі твої акаунти TikTok, Instagram, YouTube і Twitter в одному захищеному місці. Кожен користувач бачить лише своє сховище.</p>
     <div id="gbtn"></div>
     <button class="btn sso" id="googleFallback"><svg viewBox="0 0 24 24"><path fill="#fff" d="M21.35 11.1H12v2.9h5.35c-.5 2.4-2.5 3.5-5.35 3.5a6 6 0 1 1 0-12c1.5 0 2.8.5 3.8 1.4l2.1-2.1A9 9 0 1 0 12 21c5.2 0 8.6-3.6 8.6-8.8 0-.4 0-.8-.1-1.1z"/></svg>Увійти через Google</button>
-    <details class="demo">
-      <summary>Вхід за поштою (старий локальний режим)</summary>
-      <div id="demoBox">
-        <label>Пошта (локальний профіль)</label>
-        <input id="demoEmail" type="email" placeholder="you@example.com" autocomplete="email">
-        <button class="btn primary" style="width:100%;margin-top:12px" id="demoBtn">Продовжити</button>
-        <button class="btn" style="width:100%;margin-top:8px" id="demoLogin">Увійти</button>
-        <div class="note">Потрібен лише щоб відкрити сховища, створені раніше цим способом. Нові користувачі входять через Google.</div>
-      </div>
-    </details>
+    <div class="sep">або за поштою</div>
+    <div id="demoBox">
+      <label>Пошта</label>
+      <input id="demoEmail" type="email" placeholder="you@example.com" autocomplete="email">
+      <button class="btn primary" style="width:100%;margin-top:12px" id="demoBtn">Продовжити</button>
+      <button class="btn" style="width:100%;margin-top:8px" id="demoLogin">Увійти</button>
+    </div>
     <div class="err" id="authErr"></div>
     <div class="note" id="authNote"></div>
   </div>
@@ -239,8 +237,25 @@ const AUTO_LOCK_MS=5*60*1000, PBKDF_ITER=600000, CLIP_MS=20000;
 const PLAT={
   tiktok:{name:'TikTok',tag:'TT',login:'https://www.tiktok.com/login'},
   instagram:{name:'Instagram',tag:'IG',login:'https://www.instagram.com/accounts/login/'},
-  youtube:{name:'YouTube',tag:'YT',login:'https://www.youtube.com/'}
+  youtube:{name:'YouTube',tag:'YT',login:'https://www.youtube.com/'},
+  twitter:{name:'Twitter (X)',tag:'X',login:'https://x.com/i/flow/login'}
 };
+// Автовизначення платформи за посиланням на профіль (або за доменом у тексті)
+function detectPlatform(raw){
+  const s=String(raw).trim().replace(/[?#].*$/,'');
+  const rules=[
+    ['tiktok',/tiktok\.com\/@([\w.]+)/i,/tiktok\.com/i],
+    ['instagram',/instagram\.com\/(?!p\/|reel\/|stories\/|explore\/)([\w.]+)/i,/instagram\.com|instagr\.am/i],
+    ['youtube',/youtube\.com\/(?:@|c\/|user\/|channel\/)([\w.\-]+)/i,/youtube\.com|youtu\.be/i],
+    ['twitter',/(?:^|[/.@])(?:twitter|x)\.com\/(?!i\/|home|intent|share|search)@?(\w+)/i,/(?:^|[/.@])(?:twitter|x)\.com/i]
+  ];
+  for(const[platform,full,host]of rules){
+    const m=s.match(full);
+    if(m)return{platform,handle:'@'+m[1]};
+    if(host.test(s))return{platform,handle:null};
+  }
+  return null;
+}
 const METRICS=[['subs','Підписники'],['views','Перегляди'],['likes','Лайки'],['comments','Коментарі'],['posts','Публікації']];
 const $=id=>document.getElementById(id);
 const S={user:null,key:null,salt:null,accounts:[],sel:null,filter:'all',search:'',fails:0,lockTimer:null,tab:'info',cal:null,day:null,metric:'subs'};
@@ -317,7 +332,7 @@ function goUnlock(login){
   $('ulLogin').classList.toggle('hidden',has);
   if(missing){
     $('ulTitle').textContent='Обліковий запис не знайдено';
-    $('ulText').textContent='Для '+S.user.email+' на цьому пристрої немає збереженого сховища: дані зберігаються лише в браузері, де ти реєструвався. Якщо акаунт створено деінде, імпортуй зашифровану резервну копію (кнопка ⬇ у додатку) — або створи новий.';
+    $('ulText').textContent='Для '+S.user.email+' на цьому пристрої немає збереженого сховища: дані зберігаються лише в браузері, де ти реєструвався. Якщо акаунт створено на іншому пристрої чи в іншому браузері, імпортуй зашифровану резервну копію (кнопка ⬇ у додатку) або створи новий.';
   }else{
     $('ulTitle').textContent=has?'Розблокуй сховище':'Створи майстер-пароль';
     $('ulText').textContent=(has?'Привіт, ':'Вітаємо, ')+S.user.email+(has?'. Введи майстер-пароль.':'. Цей пароль шифрує всі твої акаунти. Мінімум 10 символів.');
@@ -366,6 +381,7 @@ function profileUrl(a){
   const u=encodeURIComponent(String(a.username).replace(/^@/,'').trim());
   if(a.platform==='tiktok')return 'https://www.tiktok.com/@'+u;
   if(a.platform==='instagram')return 'https://www.instagram.com/'+u+'/';
+  if(a.platform==='twitter')return 'https://x.com/'+u;
   return 'https://www.youtube.com/@'+u;
 }
 // Один клік: відкриває сторінку акаунта і копіює пароль (якщо вже є вхід у браузері — одразу потрапляєш в акаунт)
@@ -590,7 +606,7 @@ function viewStats(a,box){
       h('td',{style:'white-space:nowrap'},h('button',{class:'xbtn',title:'Редагувати',onclick:()=>statForm(a,s)},'✎'),h('button',{class:'xbtn',title:'Видалити',onclick:()=>{if(confirm('Видалити запис за '+s.d+'?'))commit(()=>{a.stats=a.stats.filter(x=>x.id!==s.id)})}},'✕')))));
     box.append(h('div',{class:'box',style:'overflow:auto'},h('h3',{},'Історія записів'),tb));
   }
-  box.append(h('div',{class:'note'},yt?'Підписники, перегляди й кількість відео можна підтягувати з YouTube за API-ключем. Лайки й коментарі YouTube дає лише власнику через OAuth, тож їх вносять вручну.':'TikTok та Instagram не дають публічного доступу до статистики без окремого схвалення, тому дані вносяться вручну (близько хвилини раз на день). Пізніше їх зможе заповнювати ШІ-агент.'));
+  box.append(h('div',{class:'note'},yt?'Підписники, перегляди й кількість відео можна підтягувати з YouTube за API-ключем. Лайки й коментарі YouTube дає лише власнику через OAuth, тож їх вносять вручну.':'TikTok, Instagram і Twitter не дають публічного доступу до статистики без окремого схвалення, тому дані вносяться вручну (близько хвилини раз на день). Пізніше їх зможе заповнювати ШІ-агент.'));
 }
 function svgEl(tag,attrs,...kids){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const k in(attrs||{}))e.setAttribute(k,attrs[k]);kids.forEach(c=>e.append(c));return e}
 function chart(pts){
@@ -696,9 +712,21 @@ function accountForm(a){
   const mail=h('input',{type:'email',placeholder:'пошта акаунта',value:a?.email||''});
   const pass=h('input',{type:'password',autocomplete:'off',value:a?.password||''});
   const notes=h('textarea',{rows:'3'},a?.notes||'');
+  const hint=h('div',{class:'note',style:'margin:6px 0 0;color:var(--ok)'});
+  // Якщо вставлено посилання на профіль іншої платформи — перемикаємо платформу автоматично
+  const autodetect=()=>{
+    const d=detectPlatform(user.value);if(!d)return;
+    const changed=sel.value!==d.platform;
+    sel.value=d.platform;
+    if(d.handle)user.value=d.handle;
+    hint.textContent=changed?'Платформу автоматично змінено на '+PLAT[d.platform].name:(d.handle?'Нік узято з посилання':'');
+  };
+  user.addEventListener('paste',()=>setTimeout(autodetect,0));
+  user.addEventListener('change',autodetect);
   dialog(a?'Редагувати акаунт':'Новий акаунт',[
-    ...field('Платформа',sel),...field('Імʼя акаунта (нік, як у посиланні на профіль)',user),...field('Пошта',mail),...field('Пароль (необовʼязково)',pass),...field('Нотатки',notes)],
+    ...field('Платформа',sel),...field('Імʼя акаунта (нік або посилання на профіль)',user),hint,...field('Пошта',mail),...field('Пароль (необовʼязково)',pass),...field('Нотатки',notes)],
   async()=>{
+    autodetect();
     if(!user.value.trim()||!/^\S+@\S+\.\S+$/.test(mail.value.trim()))return'Вкажи імʼя та коректну пошту';
     const data={platform:sel.value,username:user.value.trim(),email:mail.value.trim(),password:pass.value,notes:notes.value.trim()};
     if(a){await commit(()=>Object.assign(a,data),false)}
@@ -725,7 +753,7 @@ $('file').onchange=async e=>{
       rows=txt.split(/\r?\n/).filter(Boolean).map(l=>{const c=l.split(',').map(s=>s.trim());return{platform:c[0],username:c[1],email:c[2],password:c[3],notes:c[4]||''}});
     }
     let n=0;
-    rows.forEach(r=>{const p=String(r.platform||'').toLowerCase();if(!PLAT[p]||!r.username||!r.email)return;
+    rows.forEach(r=>{let p=String(r.platform||'').toLowerCase();if(p==='x')p='twitter';if(!PLAT[p]||!r.username||!r.email)return;
       S.accounts.push(ensure({id:uid(),platform:p,username:String(r.username),email:String(r.email),password:String(r.password||''),notes:String(r.notes||''),plans:r.plans,quests:r.quests,stats:r.stats,ytKey:r.ytKey}));n++});
     await seal();renderTabs();render();toast('Імпортовано: '+n);
   }catch{toast('Не вдалося прочитати файл')}
