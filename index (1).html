@@ -1,0 +1,1166 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://accounts.google.com; style-src 'unsafe-inline' https://accounts.google.com; img-src data: https:; frame-src https://accounts.google.com; connect-src https://accounts.google.com https://www.googleapis.com https://youtubeanalytics.googleapis.com; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="strict-origin">
+<title>agromegaa</title>
+<style>
+:root{--bg:#0a0a0b;--bg2:#121214;--bg3:#1a1a1d;--line:#2a2a2f;--red:#e11d2e;--red2:#ff3b4d;--dark-red:#7a0f19;--tx:#f4f4f5;--mut:#9a9aa3;--ok:#3ddc84}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+body{background:radial-gradient(1200px 600px at 80% -10%,rgba(225,29,46,.18),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(225,29,46,.10),transparent 60%),var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+.hidden{display:none!important}
+.logo{font-weight:900;letter-spacing:.18em;text-transform:uppercase;font-size:20px}
+.logo b{color:var(--red)}
+.btn{background:var(--bg3);border:1px solid var(--line);border-radius:10px;padding:10px 16px;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--red);box-shadow:0 0 0 3px rgba(225,29,46,.15)}
+.btn.primary{background:linear-gradient(135deg,var(--red),var(--dark-red));border-color:transparent;font-weight:700}
+.btn.primary:hover{filter:brightness(1.15)}
+.btn.sm{padding:6px 10px;font-size:13px}
+.btn.danger{color:var(--red2)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--red)}
+label{display:block;font-size:12px;color:var(--mut);margin:12px 0 5px;text-transform:uppercase;letter-spacing:.08em}
+/* auth */
+.center{min-height:100%;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{width:100%;max-width:420px;background:linear-gradient(180deg,var(--bg2),var(--bg));border:1px solid var(--line);border-radius:18px;padding:30px;box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 80px rgba(225,29,46,.08)}
+.card h1{margin:0 0 6px;font-size:26px}
+.card p{color:var(--mut);margin:0 0 20px;font-size:14px;line-height:1.5}
+.sso{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-bottom:10px;padding:12px;font-weight:600}
+.sso svg{width:18px;height:18px}
+.err{color:var(--red2);font-size:13px;min-height:18px;margin-top:10px}
+.note{font-size:12px;color:var(--mut);margin-top:14px;line-height:1.5}
+#gbtn{display:flex;justify-content:center;margin-bottom:10px;min-height:44px}
+.sep{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:12px;margin:16px 0}
+.sep:before,.sep:after{content:"";flex:1;height:1px;background:var(--line)}
+/* app */
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid var(--line);background:rgba(10,10,11,.8);backdrop-filter:blur(8px);position:sticky;top:0;z-index:5}
+.hr{display:flex;gap:10px;align-items:center}
+.chip{font-size:13px;color:var(--mut);padding:6px 12px;border:1px solid var(--line);border-radius:99px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layout{display:grid;grid-template-columns:340px 1fr;height:calc(100vh - 62px)}
+aside{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:var(--bg2)}
+.side-top{padding:14px;display:flex;flex-direction:column;gap:10px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{padding:5px 11px;border-radius:99px;border:1px solid var(--line);background:none;cursor:pointer;font-size:13px;color:var(--mut)}
+.tab.on{background:var(--red);border-color:var(--red);color:#fff}
+.list{overflow:auto;padding:0 10px 14px;flex:1}
+.item{display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;cursor:pointer;border:1px solid transparent;margin-bottom:4px}
+.item:hover{background:var(--bg3)}
+.item.on{background:var(--bg3);border-color:var(--red);box-shadow:inset 3px 0 0 var(--red)}
+.badge{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-weight:800;font-size:13px;flex:none;background:var(--bg);border:1px solid var(--line)}
+.badge.tiktok{color:#fff;box-shadow:inset 0 0 0 1px #25f4ee,2px 2px 0 #fe2c55}
+.badge.instagram{background:linear-gradient(45deg,#7a0f19,#e11d2e 60%,#ff7a5c);color:#fff;border:none}
+.badge.youtube{background:var(--red);color:#fff;border:none}
+.badge.twitter{background:#000;color:#fff;border:1px solid #6b6b73;font-size:16px}
+.meta{min-width:0;flex:1}
+.meta .n{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta .e{font-size:12.5px;color:var(--red2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta .s{font-size:11.5px;color:var(--mut);margin-top:2px}
+.qgo{flex:none;width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--bg);cursor:pointer;font-size:16px;display:grid;place-items:center;transition:.15s}
+.qgo:hover{background:var(--red);border-color:var(--red)}
+main{overflow:auto;padding:26px 30px}
+.empty{height:100%;display:grid;place-items:center;text-align:center;color:var(--mut)}
+.detail{max-width:1100px}
+.dhead{display:flex;gap:16px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+.dhead .badge{width:56px;height:56px;font-size:17px;border-radius:15px}
+.dhead h2{margin:0;font-size:24px}
+.dhead span{color:var(--mut);font-size:14px}
+.dhead .go{margin-left:auto}
+.wtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.wtab{padding:8px 16px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);cursor:pointer;font-size:14px;color:var(--mut)}
+.wtab:hover{border-color:var(--red)}
+.wtab.on{background:linear-gradient(135deg,var(--red),var(--dark-red));border-color:transparent;color:#fff;font-weight:700}
+.info{max-width:640px}
+.row{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.row .k{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+.row .v{margin-top:3px;word-break:break-all;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px}
+.actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;padding:20px;z-index:20}
+.modal .card{max-height:92vh;overflow:auto}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--red);padding:10px 18px;border-radius:10px;font-weight:600;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+/* progress */
+.bar{height:12px;background:var(--bg);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--dark-red),var(--red2));border-radius:99px;transition:width .4s}
+.bar.big{height:18px}
+.prog{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:14px}
+.prog-top{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.prog-top b{font-size:28px}
+.prog-top span{color:var(--mut);font-size:13px}
+/* calendar */
+.cal-wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px;align-items:start}
+.cal-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.cal-title{flex:1;font-size:18px;font-weight:700;text-transform:capitalize}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:14px}
+.dow{font-size:11px;color:var(--mut);text-align:center;text-transform:uppercase;padding:2px 0}
+.day{min-height:64px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:6px;text-align:left;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;gap:4px}
+.day:hover{border-color:var(--red)}
+.day.today .num{color:var(--red2);font-weight:800}
+.day.sel{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red),0 0 0 3px rgba(225,29,46,.15)}
+.day.full{background:rgba(225,29,46,.14)}
+.day .cnt{font-size:10.5px;color:var(--mut)}
+.day .bar{height:5px}
+.day.blank{visibility:hidden}
+.day .dv{font-size:10.5px;color:var(--red2);font-weight:700;margin-top:2px}.day .dv.ok{color:var(--ok)}
+.plate{background:var(--bg2);border:1px solid var(--red);border-radius:14px;padding:14px 16px;margin:12px 0}
+.plate-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.plate .l{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+.plate .big b{font-size:34px;color:var(--tx)}.plate .big span{font-size:18px;color:var(--mut)}
+.plate-btns{display:flex;gap:8px}
+.plate-foot{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between;align-items:center;margin-top:10px;font-size:13px;color:var(--mut)}
+.plate-foot input{width:64px;padding:4px 8px;margin-left:6px}
+.task{display:flex;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:5px 8px;margin-bottom:6px}
+.task input[type=text]{border:none;background:transparent;padding:7px 6px}
+.task input[type=time]{width:96px;flex:none;padding:6px 4px;font-size:12px}
+.task.done input[type=text]{text-decoration:line-through;color:var(--mut)}
+.chk{width:20px!important;height:20px;padding:0!important;accent-color:var(--red);flex:none;cursor:pointer}
+.xbtn{background:none;border:none;color:var(--mut);cursor:pointer;font-size:16px;padding:4px 6px;border-radius:6px;flex:none}
+.xbtn:hover{color:var(--red2);background:var(--bg3)}
+.addrow{display:flex;gap:8px;margin-top:10px}
+.addrow input[type=time]{width:110px;flex:none}
+h3{margin:0 0 12px;font-size:16px}
+/* quests */
+.quest{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.quest.done{opacity:.6;border-color:var(--dark-red)}
+.quest .qt{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.quest h4{margin:0;font-size:16px}
+.quest.done h4{text-decoration:line-through}
+.quest .qd{color:var(--mut);font-size:13px;margin:4px 0 10px;white-space:pre-wrap}
+.quest .qm{display:flex;justify-content:space-between;font-size:12.5px;color:var(--mut);margin-top:6px}
+.qbtns{display:flex;gap:6px}
+.late{color:var(--red2)}
+/* stats */
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.kpi .l{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+.kpi .v{font-size:26px;font-weight:800;margin:4px 0 2px}
+.kpi .d{font-size:12px;color:var(--mut)}
+.up{color:var(--ok)}.down{color:var(--red2)}
+.chartbox{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:16px}
+.chartbox svg{width:100%;height:auto;display:block}
+.ch-line{fill:none;stroke:var(--red);stroke-width:2.5}
+.ch-area{fill:rgba(225,29,46,.15);stroke:none}
+.ch-grid{stroke:var(--line);stroke-width:1}
+.ch-t{fill:var(--mut);font-size:11px}
+.ch-dot{fill:var(--bg);stroke:var(--red2);stroke-width:2}
+.heat{display:grid;grid-template-rows:repeat(7,15px);grid-auto-flow:column;grid-auto-columns:15px;gap:4px;margin:10px 0}
+.hc{border-radius:3px;background:var(--bg3)}
+.hc.l1{background:rgba(225,29,46,.3)}.hc.l2{background:rgba(225,29,46,.6)}.hc.l3{background:var(--red2)}
+.hc.fut{background:transparent}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th,.tbl td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl th{color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.box{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:16px}
+.shead{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.shead .sp{flex:1}
+textarea.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
+/* журнал */
+.lg{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px;align-items:flex-start}
+.lg:last-child{border-bottom:none}
+.lg-t{color:var(--mut);flex:none;width:82px;font-size:12px;padding-top:1px}
+.lg-i{flex:none;width:20px;text-align:center}
+.lg-m{flex:1;min-width:0;word-break:break-word}
+.lg-day{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin:14px 0 2px}
+.lg-day:first-child{margin-top:0}
+.rk{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:22px;letter-spacing:.08em;text-align:center;background:var(--bg);border:1px dashed var(--red);border-radius:12px;padding:16px 10px;margin:14px 0;user-select:all;word-break:break-all}
+.prog-top .sp{flex:1}
+.vb{font-size:11px;color:var(--mut)}.vb.ok{color:var(--ok)}
+/* гайд */
+.modal .card.wide{max-width:800px}
+.gd{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--bg2)}
+.gd summary{cursor:pointer;padding:13px 16px;font-weight:700;font-size:15px}
+.gd[open] summary{color:var(--red2)}
+.gd .gb{padding:0 16px 14px;color:#d4d4d8;font-size:14px;line-height:1.65}
+.gd .gb p{margin:8px 0;color:#d4d4d8}
+.gd .gb ul,.gd .gb ol{margin:6px 0 6px 20px;padding:0}
+.gd .gb li{margin:4px 0}
+.gd .gb b{color:var(--tx)}
+@media(max-width:800px){header{padding:10px 14px;flex-wrap:wrap;gap:8px}.hr{flex-wrap:wrap;gap:6px}.lg-t{width:64px}.layout{grid-template-columns:1fr;height:auto}aside{border-right:none;border-bottom:1px solid var(--line);max-height:50vh}main{padding:18px}.chip{display:none}.cal-wrap{grid-template-columns:1fr}.day{min-height:54px}}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<section id="auth" class="center">
+  <div class="card">
+    <div class="logo" style="margin-bottom:18px">agro<b>megaa</b></div>
+    <h1>Вхід</h1>
+    <p>Усі твої акаунти TikTok, Instagram, YouTube і Twitter в одному захищеному місці. Кожен користувач бачить лише своє сховище.</p>
+    <div id="gbtn"></div>
+    <button class="btn sso" id="googleFallback"><svg viewBox="0 0 24 24"><path fill="#fff" d="M21.35 11.1H12v2.9h5.35c-.5 2.4-2.5 3.5-5.35 3.5a6 6 0 1 1 0-12c1.5 0 2.8.5 3.8 1.4l2.1-2.1A9 9 0 1 0 12 21c5.2 0 8.6-3.6 8.6-8.8 0-.4 0-.8-.1-1.1z"/></svg>Увійти через Google</button>
+    <div class="sep">або за поштою</div>
+    <div id="demoBox">
+      <label>Пошта</label>
+      <input id="demoEmail" type="email" placeholder="you@example.com" autocomplete="email">
+      <button class="btn primary" style="width:100%;margin-top:12px" id="demoBtn">Продовжити</button>
+      <button class="btn" style="width:100%;margin-top:8px" id="demoLogin">Увійти</button>
+    </div>
+    <div class="err" id="authErr"></div>
+    <div class="note" id="authNote"></div>
+    <button class="btn sm" style="width:100%;margin-top:14px" id="guideAuth">📖 Як користуватись сайтом</button>
+  </div>
+</section>
+
+<!-- VAULT UNLOCK -->
+<section id="unlock" class="center hidden">
+  <div class="card">
+    <div class="logo" style="margin-bottom:18px">agro<b>megaa</b></div>
+    <h1 id="ulTitle">Майстер-пароль</h1>
+    <p id="ulText"></p>
+    <div id="ulChoose" class="hidden"></div>
+    <div id="ulMain">
+      <label>Майстер-пароль</label>
+      <input id="mp1" type="password" autocomplete="off">
+      <div id="mp2wrap"><label>Повтори пароль</label><input id="mp2" type="password" autocomplete="off"></div>
+      <button class="btn primary" style="width:100%;margin-top:16px" id="ulBtn">Продовжити</button>
+      <button class="btn" style="width:100%;margin-top:8px" id="ulLogin">Вже маю обліковий запис — Увійти</button>
+      <button class="btn" style="width:100%;margin-top:8px" id="ulForgot">Забув майстер-пароль: відновити доступ</button>
+    </div>
+    <div id="ulMissing" class="hidden">
+      <button class="btn primary" style="width:100%" id="ulRestore">Відновити з резервної копії</button>
+      <button class="btn" style="width:100%;margin-top:8px" id="ulCreate">Створити новий обліковий запис</button>
+      <input type="file" id="ulFile" class="hidden" accept=".json">
+    </div>
+    <button class="btn" style="width:100%;margin-top:8px" id="ulOut">Вийти</button>
+    <div class="err" id="ulErr"></div>
+    <div class="note">Майстер-пароль нікуди не надсилається й не зберігається. Без нього відновити дані неможливо.</div>
+  </div>
+</section>
+
+<!-- APP -->
+<section id="app" class="hidden">
+  <header>
+    <div class="logo">agro<b>megaa</b></div>
+    <div class="hr">
+      <span class="chip" id="who"></span>
+      <button class="btn sm" id="extChip" title="Розширення Chrome для автовходу">🧩 Розширення: немає</button>
+      <button class="btn sm" id="secBtn">🔐 Безпека</button>
+      <button class="btn sm" id="guideBtn">📖 Гайд</button>
+      <button class="btn sm" id="lockBtn">🔒 Заблокувати</button>
+      <button class="btn sm" id="outBtn">Вийти</button>
+    </div>
+  </header>
+  <div class="layout">
+    <aside>
+      <div class="side-top">
+        <input id="q" placeholder="Пошук за іменем або поштою…">
+        <div class="tabs" id="tabs"></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn primary" style="flex:1" id="addBtn">+ Додати акаунт</button>
+          <button class="btn" id="impBtn" title="Імпорт JSON / CSV">⬆</button>
+          <button class="btn" id="expBtn" title="Зашифрована резервна копія">⬇</button>
+        </div>
+        <input type="file" id="file" class="hidden" accept=".json,.csv,.txt">
+      </div>
+      <div class="list" id="list"></div>
+    </aside>
+    <main id="main"></main>
+  </div>
+</section>
+
+<div id="modalRoot"></div>
+
+<script>
+'use strict';
+/* ===== НАЛАШТУВАННЯ ===== */
+const CFG={GOOGLE_CLIENT_ID:'657778652488-dhmgc0hlrifuer396rgtjlh59oedhj8c.apps.googleusercontent.com'};
+const AUTO_LOCK_MS=5*60*1000, PBKDF_ITER=600000, CLIP_MS=20000;
+const PLAT={
+  tiktok:{name:'TikTok',tag:'TT',login:'https://www.tiktok.com/login'},
+  instagram:{name:'Instagram',tag:'IG',login:'https://www.instagram.com/accounts/login/'},
+  youtube:{name:'YouTube',tag:'YT',login:'https://www.youtube.com/'},
+  twitter:{name:'Twitter (X)',tag:'X',login:'https://x.com/i/flow/login'}
+};
+// Автовизначення платформи за посиланням на профіль (або за доменом у тексті)
+function detectPlatform(raw){
+  const s=String(raw).trim().replace(/[?#].*$/,'');
+  const rules=[
+    ['tiktok',/tiktok\.com\/@([\w.]+)/i,/tiktok\.com/i],
+    ['instagram',/instagram\.com\/(?!p\/|reel\/|stories\/|explore\/)([\w.]+)/i,/instagram\.com|instagr\.am/i],
+    ['youtube',/youtube\.com\/(?:@|c\/|user\/|channel\/)([\w.\-]+)/i,/youtube\.com|youtu\.be/i],
+    ['twitter',/(?:^|[/.@])(?:twitter|x)\.com\/(?!i\/|home|intent|share|search)@?(\w+)/i,/(?:^|[/.@])(?:twitter|x)\.com/i]
+  ];
+  for(const[platform,full,host]of rules){
+    const m=s.match(full);
+    if(m)return{platform,handle:'@'+m[1]};
+    if(host.test(s))return{platform,handle:null};
+  }
+  return null;
+}
+const METRICS=[['subs','Підписники'],['views','Перегляди'],['likes','Лайки'],['comments','Коментарі'],['posts','Публікації']];
+const $=id=>document.getElementById(id);
+const S={user:null,key:null,salt:null,accounts:[],sel:null,filter:'all',search:'',fails:0,lockTimer:null,tab:'info',cal:null,day:null,metric:'subs',logf:'all',rk:null,ext:null,yt:null};
+
+function h(tag,attrs,...kids){const e=document.createElement(tag);for(const k in(attrs||{})){if(k==='class')e.className=attrs[k];else if(k.startsWith('on'))e.addEventListener(k.slice(2),attrs[k]);else e.setAttribute(k,attrs[k])}kids.flat().forEach(c=>{if(c===false||c==null)return;e.append(c instanceof Node?c:document.createTextNode(c))});return e}
+function toast(t){const d=h('div',{class:'toast'},t);d.style.bottom=(24+document.querySelectorAll('.toast').length*54)+'px';document.body.append(d);setTimeout(()=>d.remove(),3200)}
+function show(id){['auth','unlock','app'].forEach(s=>$(s).classList.toggle('hidden',s!==id))}
+const uid=()=>crypto.randomUUID();
+const fmt=n=>n==null?'—':Number(n).toLocaleString('uk-UA');
+const p2=n=>String(n).padStart(2,'0');
+const dk=d=>d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
+const pd=k=>{const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)};
+const numOrNull=v=>{v=String(v).trim();if(v==='')return null;const n=Math.floor(Number(v));return Number.isFinite(n)&&n>=0?n:NaN};
+
+/* ===== КРИПТО ===== */
+const enc=new TextEncoder(),dec=new TextDecoder();
+const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b)));
+const unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function deriveKey(pw,salt){
+  const base=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:PBKDF_ITER,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function seal(){
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},S.key,enc.encode(JSON.stringify(S.accounts)));
+  localStorage.setItem(vaultKey(),JSON.stringify({v:1,salt:b64(S.salt),iv:b64(iv),data:b64(ct),...(S.rk?{rk:S.rk}:{})}));
+  regIdx();
+}
+// Кожен акаунт має власні план, квести, статистику й журнал дій (старі акаунти доповнюються автоматично)
+function ensure(a){a.plans=a.plans&&typeof a.plans==='object'&&!Array.isArray(a.plans)?a.plans:{};a.quests=Array.isArray(a.quests)?a.quests:[];a.stats=Array.isArray(a.stats)?a.stats:[];a.ytKey=a.ytKey||'';a.log=Array.isArray(a.log)?a.log:[];a.link=typeof a.link==='string'?a.link:'';a.loginId=typeof a.loginId==='string'?a.loginId:'';a.daily=a.daily&&typeof a.daily==='object'&&!Array.isArray(a.daily)?a.daily:{};a.goal=Number.isInteger(a.goal)&&a.goal>0?a.goal:1;return a}
+// Журнал дій: кожна зміна в акаунті записується сюди
+const LOGCAP=300;
+function act(a,kind,msg){a.log.push({t:Date.now(),k:kind,m:String(msg).slice(0,300)});if(a.log.length>LOGCAP)a.log.splice(0,a.log.length-LOGCAP)}
+async function openVault(pw,rec){
+  const salt=unb64(rec.salt),key=await deriveKey(pw,salt);
+  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(rec.iv)},key,unb64(rec.data));
+  S.key=key;S.salt=salt;S.rk=rec.rk&&rec.rk.salt&&rec.rk.iv&&rec.rk.data?rec.rk:null;S.accounts=JSON.parse(dec.decode(pt)).map(ensure);
+}
+// Сховище прив'язане до користувача (провайдер + унікальний id): інший користувач не бачить чужих даних
+const vk=(p,s)=>'agromegaa:vault:'+p+':'+s;
+const vaultKey=()=>vk(S.user.provider,S.user.sub);
+// Індекс сховищ на цьому пристрої: за поштою знаходимо те саме сховище незалежно від способу входу (Google чи пошта)
+const IDX='agromegaa:idx';
+function readIdx(){try{const j=JSON.parse(localStorage.getItem(IDX)||'[]');return Array.isArray(j)?j:[]}catch{return[]}}
+function regIdx(){
+  try{
+    const e=String(S.user.email||'').toLowerCase(),l=readIdx();
+    if(!e||l.some(x=>x.provider===S.user.provider&&x.sub===S.user.sub))return;
+    l.push({provider:S.user.provider,sub:S.user.sub,email:e});localStorage.setItem(IDX,JSON.stringify(l));
+  }catch{}
+}
+function vaultsFor(email){
+  const e=String(email||'').toLowerCase(),out=[];
+  readIdx().forEach(x=>{if(x.email===e&&localStorage.getItem(vk(x.provider,x.sub))&&!out.some(o=>o.provider===x.provider&&o.sub===x.sub))out.push(x)});
+  if(localStorage.getItem(vk('demo',e))&&!out.some(o=>o.provider==='demo'&&o.sub===e))out.push({provider:'demo',sub:e,email:e}); // старі сховища без індексу
+  return out;
+}
+const maskEmail=e=>{const[l,d]=String(e).split('@');return d?l.slice(0,2)+'***@'+d:String(e)};
+function knownEmails(){
+  const set=new Set();
+  readIdx().forEach(x=>{if(localStorage.getItem(vk(x.provider,x.sub)))set.add(x.email)});
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('agromegaa:vault:demo:'))set.add(k.slice(21))}
+  return[...set];
+}
+const provLabel=p=>p==='google'?'Google':'пошта';
+
+/* ===== ВХІД ===== */
+function jwt(t){const p=t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');return JSON.parse(decodeURIComponent(atob(p).split('').map(c=>'%'+c.charCodeAt(0).toString(16).padStart(2,'0')).join('')))}
+function loginAs(u,login){sessionStorage.setItem('agro:user',JSON.stringify(u));S.user=u;goUnlock(login)}
+function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.async=true;s.onload=ok;s.onerror=no;document.head.append(s)})}
+
+async function initAuth(){
+  const hasG=!!CFG.GOOGLE_CLIENT_ID;
+  $('authNote').textContent=hasG?'':'Вкажи GOOGLE_CLIENT_ID на початку скрипта, щоб увімкнути вхід через Google.';
+  $('gbtn').classList.toggle('hidden',!hasG);
+  $('googleFallback').classList.toggle('hidden',hasG);
+  if(hasG){
+    try{
+      await loadScript('https://accounts.google.com/gsi/client');
+      google.accounts.id.initialize({client_id:CFG.GOOGLE_CLIENT_ID,callback:r=>{
+        try{const p=jwt(r.credential);if(p.aud!==CFG.GOOGLE_CLIENT_ID)throw 0;loginAs({provider:'google',sub:p.sub,email:String(p.email||'').toLowerCase(),name:p.name||p.email,verified:p.email_verified!==false})}catch{$('authErr').textContent='Помилка входу через Google'}
+      }});
+      google.accounts.id.renderButton($('gbtn'),{theme:'filled_black',size:'large',text:'continue_with',width:340});
+    }catch{$('authErr').textContent='Не вдалося завантажити Google'}
+  }
+  $('googleFallback').onclick=()=>$('authErr').textContent='Вкажи GOOGLE_CLIENT_ID у налаштуваннях, щоб увімкнути Google-вхід.';
+  $('demoBtn').onclick=()=>demoGo(false);
+  $('demoLogin').onclick=()=>demoGo(true);
+  function demoGo(login){
+    const e=$('demoEmail').value.trim().toLowerCase();
+    if(!/^\S+@\S+\.\S+$/.test(e)){$('authErr').textContent='Введи коректну пошту';return}
+    loginAs({provider:'demo',sub:e,email:e,name:e},login);
+  }
+}
+
+/* ===== РОЗБЛОКУВАННЯ ===== */
+function goUnlock(login){
+  S.key=null;S.accounts=[];S.fails=0;
+  let has=!!localStorage.getItem(vaultKey());
+  const cands=vaultsFor(S.user.email);
+  // Є сховище з тією самою поштою, але створене іншим способом входу — відкриваємо його
+  if(!has&&cands.length&&S.user.verified!==false){
+    S.user={...S.user,provider:cands[0].provider,sub:cands[0].sub};
+    sessionStorage.setItem('agro:user',JSON.stringify(S.user));has=true;
+  }
+  if(has)regIdx();
+  const missing=login===true&&!has;
+  $('ulMain').classList.toggle('hidden',missing);
+  $('ulMissing').classList.toggle('hidden',!missing);
+  $('ulLogin').classList.toggle('hidden',has);
+  $('ulForgot').classList.toggle('hidden',!has);
+  // Якщо для цієї пошти є кілька сховищ — даємо вибрати
+  const ch=$('ulChoose');ch.replaceChildren();
+  const all=vaultsFor(S.user.email);
+  ch.classList.toggle('hidden',all.length<2);
+  if(all.length>1){
+    ch.append(h('div',{class:'note',style:'margin:0 0 8px'},'Для цієї пошти на пристрої знайдено кілька сховищ. Обери потрібне:'));
+    all.forEach(c=>ch.append(h('button',{class:'btn'+(c.provider===S.user.provider&&c.sub===S.user.sub?' primary':''),style:'width:100%;margin-bottom:6px',onclick:()=>{S.user={...S.user,provider:c.provider,sub:c.sub};sessionStorage.setItem('agro:user',JSON.stringify(S.user));goUnlock(login)}},'Сховище · вхід через '+provLabel(c.provider))));
+  }
+  if(missing){
+    const others=knownEmails().filter(e=>e!==String(S.user.email).toLowerCase());
+    $('ulTitle').textContent='Обліковий запис не знайдено';
+    $('ulText').textContent='Для '+S.user.email+' на цьому пристрої немає збереженого сховища: дані зберігаються лише в браузері, де ти реєструвався.'
+      +(others.length?' Тут збережені сховища для: '+others.map(maskEmail).join(', ')+'. Можливо, ти ввів іншу пошту, перевір її або увійди через Google.':'')
+      +' Якщо акаунт створено на іншому пристрої чи в іншому браузері, відновіть його з резервної копії (кнопка ⬇ у додатку) або створи новий.';
+  }else{
+    $('ulTitle').textContent=has?'Розблокуй сховище':'Створи майстер-пароль';
+    $('ulText').textContent=(has?'Привіт, ':'Вітаємо, ')+S.user.email+(has?'. Введи майстер-пароль.':'. Цей пароль шифрує всі твої акаунти. Мінімум 10 символів.');
+  }
+  $('mp2wrap').classList.toggle('hidden',has);
+  $('mp1').value='';$('mp2').value='';$('ulErr').textContent='';
+  show('unlock');if(!missing)$('mp1').focus();
+}
+$('ulLogin').onclick=()=>goUnlock(true);
+$('ulCreate').onclick=()=>goUnlock(false);
+$('ulRestore').onclick=()=>$('ulFile').click();
+$('ulFile').onchange=async e=>{
+  const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{
+    const j=JSON.parse(await f.text());
+    if(!(typeof j.salt==='string'&&typeof j.iv==='string'&&typeof j.data==='string'))throw 0;
+    const rec={v:1,salt:j.salt,iv:j.iv,data:j.data};
+    if(j.rk&&typeof j.rk.salt==='string'&&typeof j.rk.iv==='string'&&typeof j.rk.data==='string')rec.rk={salt:j.rk.salt,iv:j.rk.iv,data:j.rk.data};
+    localStorage.setItem(vaultKey(),JSON.stringify(rec));
+    goUnlock(true);
+  }catch{$('ulErr').textContent='Це не схоже на резервну копію сховища'}
+};
+$('ulBtn').onclick=async()=>{
+  const pw=$('mp1').value,rec=localStorage.getItem(vaultKey());
+  $('ulErr').textContent='';
+  if(rec){
+    try{await openVault(pw,JSON.parse(rec));startApp()}
+    catch{S.fails++;const w=Math.min(2**S.fails,60);$('ulErr').textContent='Невірний пароль. Зачекай '+w+' с.';$('ulBtn').disabled=true;setTimeout(()=>$('ulBtn').disabled=false,w*1000)}
+  }else{
+    if(pw.length<10){$('ulErr').textContent='Мінімум 10 символів';return}
+    if(pw!==$('mp2').value){$('ulErr').textContent='Паролі не збігаються';return}
+    S.salt=crypto.getRandomValues(new Uint8Array(16));S.key=await deriveKey(pw,S.salt);S.accounts=[];const rkText=genRecoveryKey();S.rk=await makeRk(pw,rkText);await seal();startApp();recoveryModal(rkText,true);
+  }
+  $('mp1').value='';$('mp2').value='';
+};
+$('mp1').addEventListener('keydown',e=>{if(e.key==='Enter')$('ulBtn').click()});
+$('mp2').addEventListener('keydown',e=>{if(e.key==='Enter')$('ulBtn').click()});
+$('ulOut').onclick=logout;
+
+function logout(){sessionStorage.removeItem('agro:user');S.user=null;S.key=null;S.rk=null;S.accounts=[];S.sel=null;clearTimeout(S.lockTimer);$('main').replaceChildren();$('modalRoot').replaceChildren();show('auth')}
+function lock(){S.key=null;S.rk=null;S.accounts=[];S.sel=null;clearTimeout(S.lockTimer);$('main').replaceChildren();$('list').replaceChildren();$('modalRoot').replaceChildren();goUnlock()}
+function bump(){clearTimeout(S.lockTimer);if(S.key)S.lockTimer=setTimeout(()=>{lock();toast('Автоблокування')},AUTO_LOCK_MS)}
+['click','keydown','mousemove','touchstart'].forEach(ev=>document.addEventListener(ev,bump,{passive:true}));
+$('lockBtn').onclick=lock;$('outBtn').onclick=logout;
+
+/* ===== ВІДНОВЛЕННЯ ДОСТУПУ (ключ відновлення) ===== */
+// Ключ відновлення зашифровує майстер-пароль і зберігається разом зі сховищем (разом із резервною копією).
+// Знаючи ключ, можна задати новий майстер-пароль. Сам ключ ніде не зберігається.
+const RK_ALPHA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function genRecoveryKey(){const b=crypto.getRandomValues(new Uint8Array(20));let s='';b.forEach(x=>{s+=RK_ALPHA[x%32]});return s.match(/.{5}/g).join('-')}
+const normRk=k=>String(k).toUpperCase().replace(/[^A-Z0-9]/g,'');
+async function makeRk(pw,rkText){
+  const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+  const key=await deriveKey(normRk(rkText),salt);
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc.encode(pw));
+  return{salt:b64(salt),iv:b64(iv),data:b64(ct)};
+}
+async function readRk(rk,rkText){
+  const key=await deriveKey(normRk(rkText),unb64(rk.salt));
+  return dec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(rk.iv)},key,unb64(rk.data)));
+}
+async function verifyPw(pw){
+  try{const rec=JSON.parse(localStorage.getItem(vaultKey()));const key=await deriveKey(pw,unb64(rec.salt));await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(rec.iv)},key,unb64(rec.data));return true}catch{return false}
+}
+function downloadText(name,text){const a=h('a',{href:URL.createObjectURL(new Blob([text],{type:'text/plain'})),download:name});document.body.append(a);a.click();a.remove()}
+function recoveryModal(rkText,first){
+  const root=$('modalRoot');
+  const chk=h('input',{type:'checkbox',class:'chk'});
+  const btn=h('button',{class:'btn primary',disabled:'',onclick:()=>root.replaceChildren()},'Готово');
+  chk.addEventListener('change',()=>{if(chk.checked)btn.removeAttribute('disabled');else btn.setAttribute('disabled','')});
+  root.replaceChildren(h('div',{class:'modal'},h('div',{class:'card'},
+    h('h1',{},'Ключ відновлення'),
+    h('p',{style:'margin-top:8px'},first?'Збережи цей ключ у надійному місці (менеджер паролів, роздруківка), але не лише на цьому пристрої. Якщо забудеш майстер-пароль, цей ключ єдиний спосіб повернути доступ до даних. Він показується лише один раз.':'Новий ключ створено, старий більше не працює. Збережи новий у надійному місці: він показується лише один раз.'),
+    h('div',{class:'rk'},rkText),
+    h('div',{class:'actions',style:'margin-top:12px'},
+      h('button',{class:'btn',onclick:()=>copy(rkText,'Ключ')},'Копіювати'),
+      h('button',{class:'btn',onclick:()=>downloadText('agromegaa-recovery-key.txt','agromegaa: ключ відновлення\nАкаунт: '+S.user.email+'\nКлюч: '+rkText+'\n\nЗберігай у надійному місці. Хто має цей ключ і резервну копію даних, може відкрити сховище.\n')},'Завантажити .txt')),
+    h('label',{style:'display:flex;gap:10px;align-items:center;text-transform:none;letter-spacing:0;font-size:14px;color:var(--tx);margin-top:16px;cursor:pointer'},chk,'Я зберіг ключ відновлення'),
+    h('div',{class:'actions'},btn))));
+}
+function forgotDialog(){
+  const rk=h('input',{type:'text',autocomplete:'off',placeholder:'XXXXX-XXXXX-XXXXX-XXXXX'});
+  const p1=h('input',{type:'password',autocomplete:'new-password'}),p2=h('input',{type:'password',autocomplete:'new-password'});
+  dialog('Відновлення доступу',[
+    h('p',{style:'margin-top:8px'},'Введи ключ відновлення, який ти зберіг при створенні сховища, і придумай новий майстер-пароль. Твої акаунти й дані не зміняться.'),
+    ...field('Ключ відновлення',rk),...field('Новий майстер-пароль (мінімум 10 символів)',p1),...field('Повтори новий пароль',p2)],
+  async()=>{
+    let rec;try{rec=JSON.parse(localStorage.getItem(vaultKey()))}catch{rec=null}
+    if(!rec)return'Сховище не знайдено';
+    if(!rec.rk)return'Для цього сховища ключ відновлення не створено. Лишається відновлення з резервної копії або створення нового сховища.';
+    if(p1.value.length<10)return'Новий пароль: мінімум 10 символів';
+    if(p1.value!==p2.value)return'Паролі не збігаються';
+    let oldPw;
+    try{oldPw=await readRk(rec.rk,rk.value);await openVault(oldPw,rec)}catch{return'Ключ відновлення не підійшов. Перевір, чи немає помилок у символах'}
+    S.salt=crypto.getRandomValues(new Uint8Array(16));S.key=await deriveKey(p1.value,S.salt);S.rk=await makeRk(p1.value,rk.value);
+    await seal();
+    setTimeout(()=>{startApp();toast('Майстер-пароль змінено, доступ відновлено')},0);
+  },'Відновити');
+}
+$('ulForgot').onclick=forgotDialog;
+function securityMenu(){
+  dialog('Безпека',[
+    h('p',{style:'margin-top:8px'},S.rk?'Ключ відновлення створено: з ним можна скинути майстер-пароль, якщо ти його забув.':'Ключ відновлення ще не створено. Без нього забутий майстер-пароль відновити неможливо. Створи його зараз.'),
+    h('div',{class:'actions'},
+      h('button',{class:'btn primary',onclick:rkDialog},S.rk?'Створити новий ключ відновлення':'Створити ключ відновлення'),
+      h('button',{class:'btn',onclick:pwDialog},'Змінити майстер-пароль'))],
+  async()=>{},'Закрити');
+}
+function rkDialog(){
+  const pw=h('input',{type:'password',autocomplete:'off'});
+  dialog(S.rk?'Новий ключ відновлення':'Ключ відновлення',[
+    h('p',{style:'margin-top:8px'},'Введи поточний майстер-пароль, щоб створити ключ відновлення. Якщо ключ уже був, він перестане працювати.'),...field('Майстер-пароль',pw)],
+  async()=>{
+    if(!(await verifyPw(pw.value)))return'Невірний майстер-пароль';
+    const rkText=genRecoveryKey();S.rk=await makeRk(pw.value,rkText);await seal();
+    setTimeout(()=>recoveryModal(rkText,false),0);
+  },'Створити');
+}
+function pwDialog(){
+  const cur=h('input',{type:'password',autocomplete:'current-password'}),n1=h('input',{type:'password',autocomplete:'new-password'}),n2=h('input',{type:'password',autocomplete:'new-password'});
+  dialog('Зміна майстер-пароля',[
+    ...field('Поточний майстер-пароль',cur),...field('Новий майстер-пароль (мінімум 10 символів)',n1),...field('Повтори новий пароль',n2),
+    h('div',{class:'note'},'Після зміни пароля буде створено новий ключ відновлення, а старий перестане працювати. Старі резервні копії відкриваються старим паролем.')],
+  async()=>{
+    if(!(await verifyPw(cur.value)))return'Невірний поточний майстер-пароль';
+    if(n1.value.length<10)return'Новий пароль: мінімум 10 символів';
+    if(n1.value!==n2.value)return'Паролі не збігаються';
+    S.salt=crypto.getRandomValues(new Uint8Array(16));S.key=await deriveKey(n1.value,S.salt);
+    const rkText=genRecoveryKey();S.rk=await makeRk(n1.value,rkText);await seal();
+    toast('Майстер-пароль змінено');
+    setTimeout(()=>recoveryModal(rkText,false),0);
+  },'Змінити');
+}
+$('secBtn').onclick=securityMenu;
+
+/* ===== РОЗШИРЕННЯ CHROME (автовхід) ===== */
+// Сайт спілкується з розширенням через window.postMessage. Пароль передається лише при натисканні «Увійти в акаунт».
+const EXT_TARGET=(location.protocol==='file:'||location.origin==='null')?'*':location.origin;
+const extWait={};
+window.addEventListener('message',e=>{
+  if(e.source!==window)return;
+  const d=e.data;if(!d||d.source!=='agromegaa-ext')return;
+  if(d.type==='PONG'){S.ext=String(d.version||'1');setExtChip()}
+  if(d.type==='LOGIN_ACK'&&extWait[d.id]){extWait[d.id](d);delete extWait[d.id]}
+});
+function pingExt(){try{window.postMessage({source:'agromegaa-site',type:'PING',id:uid()},EXT_TARGET)}catch{}}
+function extSend(type,payload,timeout){
+  return new Promise(res=>{
+    const id=uid(),t=setTimeout(()=>{delete extWait[id];res(null)},timeout);
+    extWait[id]=r=>{clearTimeout(t);res(r)};
+    window.postMessage({source:'agromegaa-site',id,type,...payload},EXT_TARGET);
+  });
+}
+function setExtChip(){
+  const b=$('extChip');if(!b)return;
+  b.textContent=S.ext?'🧩 Розширення: увімкнено':'🧩 Розширення: немає';
+  b.style.color=S.ext?'var(--ok)':'';b.style.borderColor=S.ext?'var(--ok)':'';
+}
+
+/* ===== ДОПОМІЖНЕ ===== */
+const validLink=l=>typeof l==='string'&&/^https:\/\/[^\s]+$/i.test(l)&&!!detectPlatform(l);
+// Тимчасові ніки TikTok на кшталт user9358023884568 зазвичай не мають відкритої сторінки профілю
+const tempNick=a=>a.platform==='tiktok'&&/^@?user\d{8,}$/i.test(String(a.username).trim());
+const fd=k=>pd(k).toLocaleDateString('uk-UA',{day:'numeric',month:'long'});
+function profileUrl(a){
+  if(validLink(a.link))return a.link;
+  const u=encodeURIComponent(String(a.username).replace(/^@/,'').trim());
+  if(a.platform==='tiktok')return 'https://www.tiktok.com/@'+u;
+  if(a.platform==='instagram')return 'https://www.instagram.com/'+u+'/';
+  if(a.platform==='twitter')return 'https://x.com/'+u;
+  return 'https://www.youtube.com/@'+u;
+}
+// Один клік: з розширенням Chrome — сторінка входу відкривається і логін/пароль вводяться самі; без нього — відкриваємо сторінку і копіюємо пароль
+async function quickOpen(a){
+  if(S.ext&&a.password){
+    const r=await extSend('LOGIN',{account:{platform:a.platform,identifier:a.loginId||a.email,password:a.password,secondary:String(a.username).replace(/^@/,'')}},4000);
+    if(r&&r.ok){toast('Розширення виконує вхід. Капчу чи код підтвердження введи сам');commit(()=>act(a,'open','Автовхід через розширення ('+PLAT[a.platform].name+')'),false);return}
+    toast('Розширення не відповіло'+(r&&r.error?': '+r.error:'')+'. Відкриваю звичайним способом');
+  }
+  let url=profileUrl(a),loginPage=false;
+  if(!validLink(a.link)&&tempNick(a)){url=PLAT[a.platform].login;loginPage=true;toast('Схоже на тимчасовий нік TikTok: відкриваю сторінку входу. Додай посилання на профіль у «Редагувати»')}
+  window.open(url,'_blank','noopener,noreferrer');
+  if(a.password)copy(a.password,'Пароль');
+  commit(()=>act(a,'open','Відкрито '+PLAT[a.platform].name+(loginPage?' (сторінка входу)':validLink(a.link)?' (за посиланням на профіль)':'')),false);
+}
+function copy(text,label){
+  navigator.clipboard.writeText(text).then(()=>{toast(label+' скопійовано'+(label==='Пароль'?' (очиститься через 20 с)':''));
+    if(label==='Пароль')setTimeout(()=>navigator.clipboard.writeText(' ').catch(()=>{}),CLIP_MS)}).catch(()=>toast('Не вдалося скопіювати'));
+}
+async function commit(fn,re=true){fn();try{await seal()}catch{toast('Не вдалося зберегти')}if(re)rerender()}
+function dayStats(a,k){const l=a.plans[k]||[];const done=l.filter(t=>t.done).length;return{total:l.length,done,pct:l.length?Math.round(done*100/l.length):0}}
+function bar(pct,cls){return h('div',{class:'bar '+(cls||'')},h('i',{style:'width:'+Math.max(0,Math.min(100,pct))+'%'}))}
+function dialog(title,nodes,onSave,label){
+  const root=$('modalRoot'),err=h('div',{class:'err'});
+  const close=()=>root.replaceChildren();
+  root.replaceChildren(h('div',{class:'modal',onclick:e=>{if(e.target.classList.contains('modal'))close()}},h('div',{class:'card'},
+    h('h1',{},title),...nodes,err,
+    h('div',{class:'actions'},
+      h('button',{class:'btn primary',onclick:async()=>{try{const r=await onSave();if(r)err.textContent=r;else close()}catch(e){err.textContent=e.message||'Помилка'}}},label||'Зберегти'),
+      h('button',{class:'btn',onclick:close},'Скасувати')))));
+  const f=root.querySelector('input,textarea');if(f)f.focus();
+}
+const field=(lbl,el)=>[h('label',{},lbl),el];
+
+/* ===== СПИСОК І ГОЛОВНИЙ ЕКРАН ===== */
+function startApp(){$('who').textContent=S.user.email+' ('+provLabel(S.user.provider)+')';S.sel=null;S.tab='info';show('app');renderTabs();render();bump()}
+function renderTabs(){
+  const t=$('tabs');t.replaceChildren();
+  [['all','Усі'],...Object.entries(PLAT).map(([k,v])=>[k,v.name])].forEach(([k,n])=>{
+    const cnt=k==='all'?S.accounts.length:S.accounts.filter(a=>a.platform===k).length;
+    t.append(h('button',{class:'tab'+(S.filter===k?' on':''),onclick:()=>{S.filter=k;renderTabs();render()}},n+' '+cnt));
+  });
+}
+function renderList(){
+  const l=$('list');l.replaceChildren();
+  const q=S.search.toLowerCase(),today=dk(new Date());
+  const items=S.accounts.filter(a=>(S.filter==='all'||a.platform===S.filter)&&(!q||a.username.toLowerCase().includes(q)||a.email.toLowerCase().includes(q)));
+  if(!items.length)l.append(h('div',{class:'note',style:'padding:16px;text-align:center'},'Акаунтів немає'));
+  items.forEach(a=>{
+    const st=dayStats(a,today);
+    l.append(h('div',{class:'item'+(a.id===S.sel?' on':''),onclick:()=>{S.sel=a.id;render()}},
+      h('div',{class:'badge '+a.platform},PLAT[a.platform].tag),
+      h('div',{class:'meta'},h('div',{class:'n'},a.username),h('div',{class:'e'},a.email),
+        h('div',{class:'s'},dailyWord(a).one+': '+dailyN(a,today)+'/'+a.goal),
+        st.total?h('div',{class:'s'},'Сьогодні: '+st.done+'/'+st.total+' ('+st.pct+'%)'):null),
+      h('button',{class:'qgo',title:'Увійти в акаунт одним кліком',onclick:e=>{e.stopPropagation();quickOpen(a)}},'↗')));
+  });
+}
+function render(){renderList();renderDetail()}
+function rerender(){const mm=$('main'),y=mm.scrollTop;renderDetail();mm.scrollTop=y;renderList()}
+$('q').oninput=e=>{S.search=e.target.value;renderList()};
+
+function renderDetail(){
+  const m=$('main');m.replaceChildren();
+  const a=S.accounts.find(x=>x.id===S.sel);
+  if(!a){m.append(h('div',{class:'empty'},h('div',{},h('div',{style:'font-size:44px;color:var(--red)'},'◆'),h('p',{},'Обери акаунт зі списку або додай новий'))));return}
+  const tabs=[['info','Огляд'],['cal','Календар'],['quests','Квести'],['stats','Статистика'],['log','Журнал'],['ai','ШІ-агент']];
+  const body=h('div',{});
+  m.append(h('div',{class:'detail'},
+    h('div',{class:'dhead'},h('div',{class:'badge '+a.platform},PLAT[a.platform].tag),h('div',{},h('h2',{},a.username),h('span',{},PLAT[a.platform].name+' · '+a.email)),
+      h('button',{class:'btn primary go',onclick:()=>quickOpen(a)},'Увійти в акаунт ↗')),
+    h('div',{class:'wtabs'},tabs.map(([k,n])=>h('button',{class:'wtab'+(S.tab===k?' on':''),onclick:()=>{S.tab=k;rerender()}},n))),
+    body));
+  ({info:viewInfo,cal:viewCal,quests:viewQuests,stats:viewStats,log:viewLog,ai:viewAI}[S.tab]||viewInfo)(a,body);
+}
+
+/* ===== ВКЛАДКА: ОГЛЯД ===== */
+function viewInfo(a,box){
+  let shown=false;
+  const pv=h('div',{class:'v'},'••••••••••');
+  const row=(k,vEl,btns)=>h('div',{class:'row'},h('div',{},h('div',{class:'k'},k),vEl),h('div',{style:'display:flex;gap:6px'},btns));
+  box.append(h('div',{class:'info'},
+    row('Прив\'язана пошта',h('div',{class:'v',style:'color:var(--red2)'},a.email),[h('button',{class:'btn sm',onclick:()=>copy(a.email,'Пошту')},'Копіювати')]),
+    row('Пароль',pv,[
+      h('button',{class:'btn sm',onclick:e=>{shown=!shown;pv.textContent=shown?(a.password||'—'):'••••••••••';e.target.textContent=shown?'Сховати':'Показати'}},'Показати'),
+      h('button',{class:'btn sm',onclick:()=>a.password?copy(a.password,'Пароль'):toast('Пароль не збережено')},'Копіювати')]),
+    validLink(a.link)?row('Посилання на профіль',h('div',{class:'v'},a.link),[h('button',{class:'btn sm',onclick:()=>copy(a.link,'Посилання')},'Копіювати')]):null,
+    a.notes?row('Нотатки',h('div',{class:'v',style:'white-space:pre-wrap'},a.notes),[]):null,
+    h('div',{class:'actions'},
+      h('button',{class:'btn primary',onclick:()=>quickOpen(a)},'Відкрити акаунт ↗'),
+      h('button',{class:'btn',onclick:()=>{window.open(PLAT[a.platform].login,'_blank','noopener,noreferrer');if(a.password)copy(a.password,'Пароль');commit(()=>act(a,'open','Відкрито сторінку входу '+PLAT[a.platform].name),false)}},'Сторінка входу'),
+      h('button',{class:'btn',onclick:()=>accountForm(a)},'Редагувати'),
+      h('button',{class:'btn danger',onclick:async()=>{if(confirm('Видалити акаунт '+a.username+' разом з планами, квестами й статистикою?')){S.accounts=S.accounts.filter(x=>x.id!==a.id);S.sel=null;await seal();renderTabs();render()}}},'Видалити')),
+    h('div',{class:'note'},'«Відкрити акаунт» відкриває сторінку профілю в новій вкладці й копіює пароль. Якщо профіль «не знайдено», у «Редагувати» встав точне посилання на нього або користуйся кнопкою «Сторінка входу». З розширенням Chrome (див. «Гайд») логін і пароль вводяться на сторінці входу автоматично.'),
+    a.log.length?h('div',{class:'box',style:'margin-top:18px'},h('h3',{},'Останні дії'),
+      a.log.slice(-5).reverse().map(logRow),
+      h('div',{class:'actions',style:'margin-top:10px'},h('button',{class:'btn sm',onclick:()=>{S.tab='log';rerender()}},'Увесь журнал →'))):null));
+}
+/* ===== ВКЛАДКА: ЖУРНАЛ ДІЙ ===== */
+const KINDS={acc:['👤','Акаунт'],cal:['📅','Календар'],quest:['🎯','Квести'],stat:['📈','Статистика'],open:['↗','Входи'],ai:['🤖','ШІ-агент']};
+function logRow(e){
+  const d=new Date(e.t),kd=KINDS[e.k]||['•',''];
+  return h('div',{class:'lg'},h('span',{class:'lg-t'},d.toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'})+' '+d.toLocaleDateString('uk-UA',{day:'2-digit',month:'2-digit'})),h('span',{class:'lg-i'},kd[0]),h('span',{class:'lg-m'},e.m));
+}
+function viewLog(a,box){
+  const chips=h('div',{class:'tabs',style:'margin-bottom:12px'},[['all','Усі'],...Object.entries(KINDS).map(([k,v])=>[k,v[1]])].map(([k,n])=>h('button',{class:'tab'+(S.logf===k?' on':''),onclick:()=>{S.logf=k;rerender()}},n)));
+  box.append(h('div',{class:'shead'},h('h3',{style:'margin:0'},'Журнал дій'),h('span',{class:'note',style:'margin:0'},a.log.length?'записів: '+a.log.length+' (зберігаються останні '+LOGCAP+')':''),h('div',{class:'sp'}),
+    a.log.length?h('button',{class:'btn sm danger',onclick:()=>{if(confirm('Очистити журнал цього акаунта?'))commit(()=>{a.log=[]})}},'Очистити'):null),chips);
+  const items=[...a.log].reverse().filter(e=>S.logf==='all'||e.k===S.logf);
+  if(!items.length){box.append(h('div',{class:'box note'},a.log.length?'У цій категорії дій немає.':'Дій ще немає. Тут зʼявляється кожна зміна в акаунті: редагування, завдання, квести, статистика й відкриття акаунта.'));return}
+  const list=h('div',{class:'box'});let day='';
+  items.forEach(e=>{
+    const dd=new Date(e.t).toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    if(dd!==day){day=dd;list.append(h('div',{class:'lg-day'},dd))}
+    list.append(logRow(e));
+  });
+  box.append(list);
+}
+
+/* ===== ВКЛАДКА: КАЛЕНДАР ===== */
+// Щоденний лічильник: відео (TikTok, Instagram, YouTube) або пости (Twitter/X)
+const dailyWord=a=>a.platform==='twitter'?{one:'Пости',low:'постів'}:{one:'Відео',low:'відео'};
+const dailyN=(a,k)=>Math.max(0,Number(a.daily[k])||0);
+// Якщо кількість публікацій у статистиці зросла проти попереднього запису, додаємо різницю в лічильник дня
+function syncDaily(a,rec){
+  if(rec.posts==null)return;
+  const prev=[...a.stats].filter(x=>x.d<rec.d&&x.posts!=null).sort((x,y)=>x.d<y.d?-1:1).pop();
+  if(!prev)return;
+  const delta=rec.posts-prev.posts;
+  if(delta>0&&dailyN(a,rec.d)<delta){a.daily[rec.d]=delta;act(a,'cal',dailyWord(a).one+' за '+fd(rec.d)+' оновлено зі статистики: '+delta)}
+}
+function setDaily(a,k,v){
+  v=Math.max(0,Math.min(999,v));const old=dailyN(a,k);if(v===old)return;
+  return commit(()=>{if(v)a.daily[k]=v;else delete a.daily[k];act(a,'cal',dailyWord(a).one+' за '+fd(k)+': '+old+' → '+v)});
+}
+function viewCal(a,box){
+  const now=new Date(),todayK=dk(now);
+  if(!S.cal)S.cal={y:now.getFullYear(),m:now.getMonth()};
+  if(!S.day)S.day=todayK;
+  const{y,m}=S.cal;
+  const nav=d=>{let nm=S.cal.m+d,ny=S.cal.y;if(nm<0){nm=11;ny--}if(nm>11){nm=0;ny++}S.cal={y:ny,m:nm};rerender()};
+  const dim=new Date(y,m+1,0).getDate();let mt=0,md=0;
+  for(let d=1;d<=dim;d++){const s=dayStats(a,dk(new Date(y,m,d)));mt+=s.total;md+=s.done}
+  const mp=mt?Math.round(md*100/mt):0;
+  let mv=0,mvDays=0;for(let d=1;d<=dim;d++){const n=dailyN(a,dk(new Date(y,m,d)));mv+=n;if(n)mvDays++}
+  const W=dailyWord(a);
+
+  const grid=h('div',{class:'cal'});
+  ['Пн','Вт','Ср','Чт','Пт','Сб','Нд'].forEach(n=>grid.append(h('div',{class:'dow'},n)));
+  const lead=(new Date(y,m,1).getDay()+6)%7;
+  for(let i=0;i<lead;i++)grid.append(h('div',{class:'day blank'}));
+  for(let d=1;d<=dim;d++){
+    const k=dk(new Date(y,m,d)),st=dayStats(a,k);
+    grid.append(h('button',{class:'day'+(k===S.day?' sel':'')+(k===todayK?' today':'')+(st.total&&st.done===st.total?' full':''),onclick:()=>{S.day=k;rerender()}},
+      h('span',{class:'num'},String(d)),
+      st.total?h('div',{},bar(st.pct),h('div',{class:'cnt'},st.done+'/'+st.total)):null,
+      dailyN(a,k)?h('div',{class:'dv'+(dailyN(a,k)>=a.goal?' ok':'')},(a.platform==='twitter'?'✎ ':'▶ ')+dailyN(a,k)):null));
+  }
+
+  const dn=dailyN(a,S.day),isToday=S.day===todayK,dpct=Math.min(100,Math.round(dn*100/a.goal));
+  const goalIn=h('input',{type:'number',min:'1',max:'999',value:String(a.goal),title:'Денна ціль',onchange:async e=>{const v=parseInt(e.target.value,10);if(!(v>=1&&v<=999)){e.target.value=String(a.goal);return}if(v===a.goal)return;const old=a.goal;await commit(()=>{a.goal=v;act(a,'cal','Денна ціль ('+W.low+'): '+old+' → '+v)})}});
+  const plate=h('div',{class:'plate'},
+    h('div',{class:'plate-top'},h('div',{},h('div',{class:'l'},W.one+(isToday?' за сьогодні':' за '+fd(S.day))),h('div',{class:'big'},h('b',{},String(dn)),h('span',{},' / '+a.goal))),
+      h('div',{class:'plate-btns'},h('button',{class:'btn',onclick:()=>setDaily(a,S.day,dn-1),...(dn?{}:{disabled:''})},'−'),h('button',{class:'btn primary',onclick:()=>setDaily(a,S.day,dn+1)},'+ '+(a.platform==='twitter'?'пост':'відео')))),
+    bar(dpct,'big'),
+    h('div',{class:'plate-foot'},h('span',{},dn>=a.goal?'Ціль дня виконано':'До цілі: '+(a.goal-dn)),h('span',{},'Ціль на день: ',goalIn),h('span',{},'За '+new Date(y,m,1).toLocaleDateString('uk-UA',{month:'long'})+': '+mv+' ('+mvDays+' дн.)')));
+  const left=h('div',{},
+    h('div',{class:'cal-head'},
+      h('button',{class:'btn sm',onclick:()=>nav(-1)},'‹'),
+      h('div',{class:'cal-title'},new Date(y,m,1).toLocaleDateString('uk-UA',{month:'long',year:'numeric'})),
+      h('button',{class:'btn sm',onclick:()=>nav(1)},'›'),
+      h('button',{class:'btn sm',onclick:()=>{S.cal={y:now.getFullYear(),m:now.getMonth()};S.day=todayK;rerender()}},'Сьогодні')),
+    h('div',{class:'prog'},
+      h('div',{class:'prog-top'},h('b',{},mp+'%'),h('span',{},mt?'плану місяця виконано ('+md+' із '+mt+') · залишилось '+(100-mp)+'%':'на цей місяць планів ще немає')),
+      bar(mp)),
+    plate,
+    grid);
+
+  // панель дня
+  const list=(a.plans[S.day]||[]),st=dayStats(a,S.day);
+  const sorted=[...list].sort((x,y2)=>(x.time||'99:99')<(y2.time||'99:99')?-1:1);
+  const txt=h('input',{type:'text',id:'newTask',placeholder:'Нове завдання…',maxlength:'200'});
+  const tm=h('input',{type:'time'});
+  const add=async()=>{const v=txt.value.trim();if(!v)return;await commit(()=>{(a.plans[S.day]=a.plans[S.day]||[]).push({id:uid(),t:v,time:tm.value||'',done:false});act(a,'cal','Додано завдання «'+v+'» на '+fd(S.day)+(tm.value?' о '+tm.value:''))});const i=$('newTask');if(i)i.focus()};
+  txt.addEventListener('keydown',e=>{if(e.key==='Enter')add()});
+  const prev=dk(new Date(pd(S.day).getTime()-864e5+(pd(S.day).getTimezoneOffset()-new Date(pd(S.day).getTime()-864e5).getTimezoneOffset())*6e4));
+  const prevList=(a.plans[prev]||[]).filter(t=>!t.done);
+  const right=h('div',{},
+    h('h3',{},pd(S.day).toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long'})),
+    h('div',{class:'prog'},
+      h('div',{class:'prog-top'},h('b',{},st.total?st.pct+'%':'—'),h('span',{},st.total?'виконано · залишилось '+(100-st.pct)+'% ('+st.done+' із '+st.total+')':'план порожній — додай завдання')),
+      bar(st.pct,'big')),
+    sorted.map(t=>h('div',{class:'task'+(t.done?' done':'')},
+      h('input',{type:'checkbox',class:'chk',...(t.done?{checked:''}:{}),onchange:()=>commit(()=>{t.done=!t.done;act(a,'cal',(t.done?'Виконано завдання «':'Повернуто в роботу завдання «')+t.t+'» ('+fd(S.day)+')')})}),
+      h('input',{type:'text',value:t.t,maxlength:'200',onchange:async e=>{const v=e.target.value.trim();if(!v){e.target.value=t.t;return}if(v===t.t)return;const old=t.t;t.t=v;act(a,'cal','Завдання змінено: «'+old+'» → «'+v+'»');await seal()}}),
+      h('input',{type:'time',value:t.time||'',onchange:async e=>{t.time=e.target.value;act(a,'cal','Для завдання «'+t.t+'» '+(t.time?'встановлено час '+t.time:'час прибрано'));await seal();rerender()}}),
+      h('button',{class:'xbtn',title:'Видалити',onclick:()=>commit(()=>{a.plans[S.day]=list.filter(x=>x.id!==t.id);if(!a.plans[S.day].length)delete a.plans[S.day];act(a,'cal','Видалено завдання «'+t.t+'» ('+fd(S.day)+')')})},'✕'))),
+    h('div',{class:'addrow'},txt,tm,h('button',{class:'btn primary',onclick:add},'+')),
+    prevList.length?h('div',{class:'actions'},h('button',{class:'btn sm',onclick:()=>commit(()=>{(a.plans[S.day]=a.plans[S.day]||[]).push(...prevList.map(t=>({id:uid(),t:t.t,time:t.time||'',done:false})));act(a,'cal','Перенесено невиконаних завдань: '+prevList.length+' на '+fd(S.day))})},'Перенести невиконане з попереднього дня ('+prevList.length+')')):null);
+
+  box.append(h('div',{class:'cal-wrap'},left,right));
+}
+
+/* ===== ВКЛАДКА: КВЕСТИ ===== */
+function viewQuests(a,box){
+  const isDone=q=>q.progress>=q.target;
+  const qs=[...a.quests].sort((x,y)=>(isDone(x)?1:0)-(isDone(y)?1:0));
+  const activeN=qs.filter(q=>!isDone(q)).length;
+  box.append(h('div',{class:'shead'},h('h3',{style:'margin:0'},'Квести акаунта'),h('span',{class:'note',style:'margin:0'},a.quests.length?('активних: '+activeN+' · виконано: '+(a.quests.length-activeN)):''),h('div',{class:'sp'}),
+    h('button',{class:'btn primary',onclick:()=>questForm(a,null)},'+ Новий квест')));
+  if(!qs.length)box.append(h('div',{class:'box note'},'Квестів ще немає. Додай ціль, наприклад «Набрати 1000 підписників» або «Опублікувати 30 відео», і відстежуй прогрес.'));
+  qs.forEach(q=>{
+    const pct=Math.min(100,Math.round(q.progress*100/q.target)),dn=isDone(q);
+    const late=q.deadline&&!dn&&q.deadline<dk(new Date());
+    box.append(h('div',{class:'quest'+(dn?' done':'')},
+      h('div',{class:'qt'},h('h4',{},(dn?'✓ ':'')+q.title),
+        h('div',{class:'qbtns'},
+          h('button',{class:'btn sm',title:'−1',onclick:()=>commit(()=>{q.progress=Math.max(0,q.progress-1);act(a,'quest','Квест «'+q.title+'»: прогрес '+q.progress+'/'+q.target)})},'−'),
+          h('button',{class:'btn sm',title:'+1',onclick:()=>commit(()=>{q.progress=Math.min(q.target,q.progress+1);act(a,'quest','Квест «'+q.title+'»: прогрес '+q.progress+'/'+q.target+(q.progress>=q.target?' · виконано':''))})},'+'),
+          h('button',{class:'btn sm',title:'Завершити',onclick:()=>commit(()=>{q.progress=q.target;act(a,'quest','Квест «'+q.title+'» завершено')})},'✓'),
+          h('button',{class:'btn sm',title:'Редагувати',onclick:()=>questForm(a,q)},'✎'),
+          h('button',{class:'btn sm danger',title:'Видалити',onclick:()=>{if(confirm('Видалити квест «'+q.title+'»?'))commit(()=>{a.quests=a.quests.filter(x=>x.id!==q.id);act(a,'quest','Видалено квест «'+q.title+'»')})}},'🗑'))),
+      q.desc?h('div',{class:'qd'},q.desc):null,
+      bar(pct,'big'),
+      h('div',{class:'qm'},h('span',{},fmt(q.progress)+' / '+fmt(q.target)+(q.unit?' '+q.unit:'')+' · '+pct+'%'),
+        q.deadline?h('span',{class:late?'late':''},(late?'прострочено · ':'до ')+pd(q.deadline).toLocaleDateString('uk-UA')):null)));
+  });
+}
+function questForm(a,q){
+  const title=h('input',{type:'text',maxlength:'120',value:q?.title||'',placeholder:'Напр.: Набрати 1000 підписників'});
+  const desc=h('textarea',{rows:'3',maxlength:'500'},q?.desc||'');
+  const target=h('input',{type:'number',min:'1',value:String(q?.target??10)});
+  const prog=h('input',{type:'number',min:'0',value:String(q?.progress??0)});
+  const unit=h('input',{type:'text',maxlength:'20',value:q?.unit||'',placeholder:'підписників, відео, лайків…'});
+  const dl=h('input',{type:'date',value:q?.deadline||''});
+  dialog(q?'Редагувати квест':'Новий квест',[
+    ...field('Назва',title),...field('Опис',desc),...field('Мета (число)',target),...field('Поточний прогрес',prog),...field('Одиниця',unit),...field('Дедлайн (необовʼязково)',dl)],
+  async()=>{
+    const t=title.value.trim(),tg=numOrNull(target.value),pr=numOrNull(prog.value);
+    if(!t)return'Вкажи назву квесту';
+    if(!tg||Number.isNaN(tg))return'Мета має бути числом від 1';
+    if(pr==null||Number.isNaN(pr))return'Прогрес має бути числом від 0';
+    const rec={id:q?.id||uid(),title:t,desc:desc.value.trim(),target:tg,progress:Math.min(pr,tg),unit:unit.value.trim(),deadline:dl.value||''};
+    await commit(()=>{
+      if(q){
+        const ch=[];
+        if(q.title!==rec.title)ch.push('назву («'+q.title+'» → «'+rec.title+'»)');
+        if(q.target!==rec.target)ch.push('мету ('+q.target+' → '+rec.target+')');
+        if(q.progress!==rec.progress)ch.push('прогрес ('+q.progress+' → '+rec.progress+')');
+        if((q.desc||'')!==rec.desc)ch.push('опис');
+        if((q.unit||'')!==rec.unit)ch.push('одиницю');
+        if((q.deadline||'')!==rec.deadline)ch.push('дедлайн');
+        a.quests[a.quests.findIndex(x=>x.id===q.id)]=rec;
+        if(ch.length)act(a,'quest','Квест «'+rec.title+'» змінено: '+ch.join(', '));
+      }else{a.quests.push(rec);act(a,'quest','Створено квест «'+rec.title+'» (мета '+rec.target+(rec.unit?' '+rec.unit:'')+')')}
+    });
+  });
+}
+
+/* ===== ВКЛАДКА: СТАТИСТИКА ===== */
+function viewStats(a,box){
+  const sn=[...a.stats].sort((x,y)=>x.d<y.d?-1:1);
+  const last=sn[sn.length-1],prev=sn[sn.length-2];
+  const yt=a.platform==='youtube';
+  const head=h('div',{class:'shead'},h('h3',{style:'margin:0'},'Статистика каналу'),h('div',{class:'sp'}),
+    yt?h('button',{class:'btn sm',id:'ytBtn',onclick:()=>ytRefresh(a)},'↻ Оновити з YouTube'):null,
+    h('button',{class:'btn primary',onclick:()=>statForm(a,null)},'+ Додати дані'));
+  box.append(head);
+
+  const kp=h('div',{class:'kpis'});
+  METRICS.forEach(([k,l])=>{
+    const v=last?last[k]:null,d=(last&&prev&&last[k]!=null&&prev[k]!=null)?last[k]-prev[k]:null;
+    kp.append(h('div',{class:'kpi'},h('div',{class:'l'},l),h('div',{class:'v'},fmt(v)),
+      h('div',{class:'d '+(d>0?'up':d<0?'down':'')},d==null?(last?'немає попередніх даних':'—'):((d>0?'▲ +':d<0?'▼ ':'• ')+fmt(d)+' з '+pd(prev.d).toLocaleDateString('uk-UA',{day:'numeric',month:'short'})))));
+  });
+  const er=last&&last.views>0&&(last.likes!=null||last.comments!=null)?((last.likes||0)+(last.comments||0))*100/last.views:null;
+  {const tk=dk(new Date());kp.append(h('div',{class:'kpi'},h('div',{class:'l'},dailyWord(a).one+' за сьогодні'),h('div',{class:'v'},dailyN(a,tk)+' / '+a.goal),h('div',{class:'d'},'ціль на день')))}
+  kp.append(h('div',{class:'kpi'},h('div',{class:'l'},'Залученість'),h('div',{class:'v'},er==null?'—':er.toFixed(2)+'%'),h('div',{class:'d'},'(лайки + коментарі) / перегляди')));
+  box.append(kp);
+
+  // графік
+  const chips=h('div',{class:'tabs',style:'margin-bottom:10px'},METRICS.map(([k,l])=>h('button',{class:'tab'+(S.metric===k?' on':''),onclick:()=>{S.metric=k;rerender()}},l)));
+  const pts=sn.filter(s=>s[S.metric]!=null).map(s=>({d:s.d,v:s[S.metric]}));
+  box.append(h('div',{class:'chartbox'},chips,pts.length>=2?chart(pts):h('div',{class:'note',style:'text-align:center;padding:30px 0'},'Для графіка потрібно щонайменше 2 записи з цим показником. Додавай дані раз на день.')));
+
+  // активність
+  box.append(activity(a));
+
+  // таблиця
+  if(sn.length){
+    const tb=h('table',{class:'tbl'},h('tr',{},h('th',{},'Дата'),METRICS.map(([,l])=>h('th',{},l)),h('th',{},'')));
+    [...sn].reverse().forEach(s=>tb.append(h('tr',{},h('td',{},pd(s.d).toLocaleDateString('uk-UA')),METRICS.map(([k])=>h('td',{},fmt(s[k]))),
+      h('td',{style:'white-space:nowrap'},h('button',{class:'xbtn',title:'Редагувати',onclick:()=>statForm(a,s)},'✎'),h('button',{class:'xbtn',title:'Видалити',onclick:()=>{if(confirm('Видалити запис за '+s.d+'?'))commit(()=>{a.stats=a.stats.filter(x=>x.id!==s.id);act(a,'stat','Видалено запис статистики за '+fd(s.d))})}},'✕')))));
+    box.append(h('div',{class:'box',style:'overflow:auto'},h('h3',{},'Історія записів'),tb));
+  }
+  box.append(h('div',{class:'note'},yt?'Кнопка «Оновити з YouTube» просить доступ лише на читання через вхід Google і підтягує підписників, перегляди, кількість відео, лайки та коментарі власного каналу.':'TikTok, Instagram і Twitter не дають публічного доступу до статистики без окремого схвалення, тому дані вносяться вручну (близько хвилини раз на день). Пізніше їх зможе заповнювати ШІ-агент.'));
+}
+function svgEl(tag,attrs,...kids){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const k in(attrs||{}))e.setAttribute(k,attrs[k]);kids.forEach(c=>e.append(c));return e}
+function chart(pts){
+  const W=640,H=230,L=56,R=16,T=14,B=30;
+  let min=Math.min(...pts.map(p=>p.v)),max=Math.max(...pts.map(p=>p.v));if(min===max){min=Math.max(0,min-1);max=max+1}
+  const X=i=>L+(pts.length===1?0:i*(W-L-R)/(pts.length-1));
+  const Y=v=>H-B-(v-min)*(H-T-B)/(max-min);
+  const s=svgEl('svg',{viewBox:'0 0 '+W+' '+H,role:'img','aria-label':'Графік'});
+  for(let i=0;i<=4;i++){
+    const v=min+(max-min)*i/4,y=Y(v);
+    s.append(svgEl('line',{class:'ch-grid',x1:L,x2:W-R,y1:y,y2:y}));
+    const t=svgEl('text',{class:'ch-t',x:L-8,y:y+4,'text-anchor':'end'});t.textContent=fmt(Math.round(v));s.append(t);
+  }
+  const line=pts.map((p,i)=>X(i)+','+Y(p.v)).join(' ');
+  s.append(svgEl('polygon',{class:'ch-area',points:X(0)+','+(H-B)+' '+line+' '+X(pts.length-1)+','+(H-B)}));
+  s.append(svgEl('polyline',{class:'ch-line',points:line}));
+  pts.forEach((p,i)=>{const c=svgEl('circle',{class:'ch-dot',cx:X(i),cy:Y(p.v),r:4});const t=svgEl('title',{});t.textContent=pd(p.d).toLocaleDateString('uk-UA')+': '+fmt(p.v);c.append(t);s.append(c)});
+  [[0,'start'],[pts.length-1,'end']].forEach(([i,an])=>{const t=svgEl('text',{class:'ch-t',x:X(i),y:H-8,'text-anchor':pts.length===1?'middle':an});t.textContent=pd(pts[i].d).toLocaleDateString('uk-UA',{day:'numeric',month:'short'});s.append(t)});
+  return s;
+}
+function activity(a){
+  const today=new Date();today.setHours(0,0,0,0);
+  const start=new Date(today);start.setDate(start.getDate()-((today.getDay()+6)%7)-77);
+  const heat=h('div',{class:'heat'});
+  for(let i=0;i<84;i++){
+    const d=new Date(start);d.setDate(start.getDate()+i);
+    if(d>today){heat.append(h('div',{class:'hc fut'}));continue}
+    const n=dayStats(a,dk(d)).done;
+    heat.append(h('div',{class:'hc'+(n>=4?' l3':n>=2?' l2':n>=1?' l1':''),title:d.toLocaleDateString('uk-UA')+': виконано '+n}));
+  }
+  let streak=0;const c=new Date(today);if(!dayStats(a,dk(c)).done)c.setDate(c.getDate()-1);
+  while(dayStats(a,dk(c)).done>0){streak++;c.setDate(c.getDate()-1)}
+  let week=0;for(let i=0;i<7;i++){const d=new Date(today);d.setDate(today.getDate()-i);week+=dayStats(a,dk(d)).done}
+  return h('div',{class:'box'},h('h3',{},'Активність (виконані завдання, 12 тижнів)'),heat,
+    h('div',{class:'note',style:'margin:0'},'Серія днів поспіль: '+streak+' · виконано за 7 днів: '+week));
+}
+function statForm(a,s){
+  const last=[...a.stats].sort((x,y)=>x.d<y.d?-1:1).pop();
+  const src=s||last||{};
+  const date=h('input',{type:'date',value:s?s.d:dk(new Date())});
+  const ins=METRICS.map(([k,l])=>[k,l,h('input',{type:'number',min:'0',value:src[k]==null?'':String(src[k]),placeholder:'—'})]);
+  dialog(s?'Редагувати запис':'Додати дані',[
+    ...field('Дата',date),...ins.flatMap(([,l,i])=>field(l,i)),
+    h('div',{class:'note'},'Порожнє поле = «немає даних». Запис за ту саму дату замінюється.')],
+  async()=>{
+    if(!date.value)return'Вкажи дату';
+    const rec={id:s?.id||uid(),d:date.value};
+    for(const[k,l,i]of ins){const v=numOrNull(i.value);if(Number.isNaN(v))return l+': введи ціле число від 0';rec[k]=v}
+    await commit(()=>{a.stats=a.stats.filter(x=>x.d!==rec.d&&x.id!==rec.id);syncDaily(a,rec);a.stats.push(rec);act(a,'stat',(s?'Змінено запис статистики за ':'Додано статистику за ')+fd(rec.d)+': '+METRICS.filter(([k])=>rec[k]!=null).map(([k,l])=>l.toLowerCase()+' '+fmt(rec[k])).join(', '))});
+  });
+}
+// YouTube: вхід через Google (OAuth) і читання статистики власного каналу. Токен живе лише в памʼяті сторінки.
+const YT_SCOPE='https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly';
+function ytToken(hint){
+  return new Promise((res,rej)=>{
+    if(S.yt&&S.yt.exp>Date.now()+30000&&S.yt.hint===hint)return res(S.yt.token);
+    if(!window.google||!google.accounts||!google.accounts.oauth2)return rej(new Error('Google ще не завантажився. Онови сторінку'));
+    const tc=google.accounts.oauth2.initTokenClient({client_id:CFG.GOOGLE_CLIENT_ID,scope:YT_SCOPE,login_hint:hint,
+      callback:r=>{if(r.error||!r.access_token)return rej(new Error(r.error==='access_denied'?'Доступ не надано':(r.error_description||r.error||'Не вдалося увійти')));
+        S.yt={token:r.access_token,exp:Date.now()+(Number(r.expires_in)||3600)*1000,hint};res(r.access_token)},
+      error_callback:e=>rej(new Error(e&&e.type==='popup_closed'?'Вікно входу закрито':'Не вдалося відкрити вікно Google'))});
+    tc.requestAccessToken();
+  });
+}
+async function ytGet(url,tok){
+  const r=await fetch(url,{headers:{Authorization:'Bearer '+tok}});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(j.error&&j.error.message||'Помилка '+r.status);
+  return j;
+}
+async function ytRefresh(a){
+  const btn=$('ytBtn');if(btn){btn.disabled=true;btn.textContent='Завантаження…'}
+  const reset=()=>{if(btn){btn.disabled=false;btn.textContent='↻ Оновити з YouTube'}};
+  try{
+    const tok=await ytToken(a.email);
+    const ch=await ytGet('https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet&mine=true',tok);
+    const c=ch.items&&ch.items[0];
+    if(!c){S.yt=null;throw new Error('У цьому Google-акаунті немає каналу YouTube. Обери акаунт, до якого привʼязаний канал')}
+    const want=String(a.username).replace(/^@/,'').trim().toLowerCase(),got=String(c.snippet.customUrl||'').replace(/^@/,'').toLowerCase();
+    if(got&&want&&got!==want&&!confirm('Google відкрив канал «'+c.snippet.title+'» (@'+got+'), а в акаунті вказано @'+want+'. Записати його дані в цей акаунт?')){S.yt=null;throw new Error('Скасовано. Увійди в потрібний Google-акаунт')}
+    const st=c.statistics,today=dk(new Date()),old=a.stats.find(x=>x.d===today)||{};
+    let likes=old.likes??null,comments=old.comments??null,note='';
+    try{ // лайки й коментарі (за весь час) дає YouTube Analytics; якщо не вийшло, лишаємо як було
+      const rp=await ytGet('https://youtubeanalytics.googleapis.com/v2/reports?ids=channel==MINE&startDate=2005-04-23&endDate='+today+'&metrics=likes,comments',tok);
+      const row=rp.rows&&rp.rows[0];if(row){likes=Number(row[0]);comments=Number(row[1])}
+    }catch{note=' (лайки й коментарі не отримано: увімкни YouTube Analytics API)'}
+    const rec={...old,id:old.id||uid(),d:today,subs:st.hiddenSubscriberCount?(old.subs??null):Number(st.subscriberCount),views:Number(st.viewCount),posts:Number(st.videoCount),likes,comments};
+    await commit(()=>{a.stats=a.stats.filter(x=>x.d!==today);syncDaily(a,rec);a.stats.push(rec);act(a,'stat','Статистику оновлено з YouTube: підписники '+fmt(rec.subs)+', перегляди '+fmt(rec.views)+', відео '+fmt(rec.posts))});
+    toast('Статистику оновлено'+note);
+  }catch(e){toast('YouTube: '+(e.message||'помилка'));reset()}
+}
+
+/* ===== ВКЛАДКА: ШІ-АГЕНТ (заготовка) ===== */
+// Контекст акаунта для майбутнього агента: план, квести, статистика. Пароль ніколи не передається.
+function ctx(a){return{platform:a.platform,username:a.username,today:dk(new Date()),plans:a.plans,quests:a.quests,stats:a.stats,daily:a.daily,dailyGoal:a.goal,recentActions:a.log.slice(-50)}}
+function viewAI(a,box){
+  const json=JSON.stringify(ctx(a),null,1);
+  box.append(h('div',{class:'info'},
+    h('div',{class:'box'},h('h3',{},'ШІ-агент для цього акаунта'),
+      h('p',{style:'margin:0 0 12px'},'Тут зʼявиться чат із агентом, який знатиме план, квести й статистику саме цього акаунта, пропонуватиме завдання, коригуватиме квести й вноситиме дані.'),
+      h('input',{type:'text',disabled:'',placeholder:'Запитай агента… (скоро)'})),
+    h('div',{class:'box'},h('h3',{},'Контекст акаунта (JSON)'),
+      h('textarea',{class:'code',rows:'8',readonly:''},json),
+      h('div',{class:'actions',style:'margin-top:10px'},h('button',{class:'btn sm',onclick:()=>copy(json,'Контекст')},'Копіювати контекст')),
+      h('div',{class:'note'},'Пароль у контекст не входить. Для підключення агента в коді вже є інтерфейс window.agromegaa: getContext(id), addTask(id,date,text,time), addQuest(id,{…}), addStat(id,{…}).'))));
+}
+window.agromegaa={
+  version:2,
+  listAccounts:()=>S.accounts.map(a=>({id:a.id,platform:a.platform,username:a.username})),
+  getContext:id=>{const a=S.accounts.find(x=>x.id===id);return a?ctx(a):null},
+  async addTask(id,date,text,time){const a=S.accounts.find(x=>x.id===id);if(!a||!/^\d{4}-\d{2}-\d{2}$/.test(date)||!String(text).trim())return false;await commit(()=>{(a.plans[date]=a.plans[date]||[]).push({id:uid(),t:String(text).trim().slice(0,200),time:time||'',done:false});act(a,'ai','ШІ-агент додав завдання «'+String(text).trim().slice(0,80)+'» на '+fd(date))});return true},
+  async addQuest(id,q){const a=S.accounts.find(x=>x.id===id);if(!a||!q||!String(q.title||'').trim())return false;await commit(()=>{a.quests.push({id:uid(),title:String(q.title).trim().slice(0,120),desc:String(q.desc||'').slice(0,500),target:Math.max(1,Math.floor(+q.target)||1),progress:Math.max(0,Math.floor(+q.progress)||0),unit:String(q.unit||'').slice(0,20),deadline:q.deadline||''});act(a,'ai','ШІ-агент створив квест «'+String(q.title).trim().slice(0,80)+'»')});return true},
+  async addStat(id,s){const a=S.accounts.find(x=>x.id===id);if(!a||!s)return false;const d=s.d||dk(new Date());const rec={id:uid(),d};METRICS.forEach(([k])=>{const v=s[k]==null?null:Math.max(0,Math.floor(+s[k]));rec[k]=Number.isFinite(v)?v:null});await commit(()=>{a.stats=a.stats.filter(x=>x.d!==d);a.stats.push(rec);act(a,'ai','ШІ-агент додав статистику за '+fd(d))});return true}
+};
+
+/* ===== ФОРМА АКАУНТА ===== */
+function accountForm(a){
+  const sel=h('select',{});Object.entries(PLAT).forEach(([k,v])=>{const o=h('option',{value:k},v.name);if(a&&a.platform===k)o.selected=true;sel.append(o)});
+  const user=h('input',{type:'text',placeholder:'@username',value:a?.username||''});
+  const mail=h('input',{type:'email',placeholder:'пошта акаунта',value:a?.email||''});
+  const pass=h('input',{type:'password',autocomplete:'off',value:a?.password||''});
+  const loginId=h('input',{type:'text',autocomplete:'off',placeholder:'за замовчуванням: пошта',value:a?.loginId||''});
+  const notes=h('textarea',{rows:'3'},a?.notes||'');
+  const link=h('input',{type:'text',placeholder:'https://www.tiktok.com/@нік (необовʼязково)',value:a?.link||''});
+  const hint=h('div',{class:'note',style:'margin:6px 0 0;color:var(--ok)'});
+  const normLink=raw=>{raw=String(raw).trim().replace(/[?#].*$/,'');if(!raw)return'';return /^https?:\/\//i.test(raw)?raw.replace(/^http:/i,'https:'):'https://'+raw};
+  // Якщо вставлено посилання на профіль іншої платформи — перемикаємо платформу автоматично й запамʼятовуємо посилання
+  const autodetect=(src)=>{
+    const fld=src||user,d=detectPlatform(fld.value);if(!d)return;
+    const changed=sel.value!==d.platform;
+    sel.value=d.platform;
+    if(d.handle){
+      if(fld===user){if(!link.value.trim()&&user.value.includes('/'))link.value=normLink(user.value);user.value=d.handle}
+      else if(!user.value.trim()||user.value.includes('/'))user.value=d.handle;
+    }
+    hint.textContent=changed?'Платформу автоматично змінено на '+PLAT[d.platform].name:(d.handle?'Нік узято з посилання':'');
+  };
+  user.addEventListener('paste',()=>setTimeout(()=>autodetect(user),0));
+  user.addEventListener('change',()=>autodetect(user));
+  link.addEventListener('paste',()=>setTimeout(()=>autodetect(link),0));
+  link.addEventListener('change',()=>autodetect(link));
+  dialog(a?'Редагувати акаунт':'Новий акаунт',[
+    ...field('Платформа',sel),...field('Імʼя акаунта (нік або посилання на профіль)',user),hint,...field('Пошта',mail),...field('Пароль (необовʼязково)',pass),...field('Логін для входу (якщо відрізняється від пошти)',loginId),h('div',{class:'note',style:'margin:6px 0 0'},'Розширення Chrome підставить логін і пароль на сторінці входу само.'),
+    ...field('Посилання на профіль (необовʼязково)',link),h('div',{class:'note',style:'margin:6px 0 0'},'Якщо кнопка «Увійти в акаунт» відкриває «профіль не знайдено», встав сюди точне посилання на свій профіль.'),
+    ...field('Нотатки',notes)],
+  async()=>{
+    autodetect(user);
+    if(!user.value.trim()||!/^\S+@\S+\.\S+$/.test(mail.value.trim()))return'Вкажи імʼя та коректну пошту';
+    const ln=normLink(link.value);
+    if(ln&&!validLink(ln))return'Посилання має вести на TikTok, Instagram, YouTube або Twitter (X)';
+    if(ln&&detectPlatform(ln).platform!==sel.value)sel.value=detectPlatform(ln).platform;
+    const data={platform:sel.value,username:user.value.trim(),email:mail.value.trim(),password:pass.value,notes:notes.value.trim(),link:ln,loginId:loginId.value.trim()};
+    if(a){
+      await commit(()=>{
+        const ch=[];
+        if(a.platform!==data.platform)ch.push('платформу ('+PLAT[a.platform].name+' → '+PLAT[data.platform].name+')');
+        if(a.username!==data.username)ch.push('імʼя ('+a.username+' → '+data.username+')');
+        if(a.email!==data.email)ch.push('пошту ('+a.email+' → '+data.email+')');
+        if((a.password||'')!==data.password)ch.push('пароль');
+        if((a.link||'')!==data.link)ch.push('посилання на профіль');
+        if((a.loginId||'')!==data.loginId)ch.push('логін для входу');
+        if((a.notes||'')!==data.notes)ch.push('нотатки');
+        Object.assign(a,data);
+        if(ch.length)act(a,'acc','Змінено: '+ch.join(', '));
+      },false);
+    }else{const n=ensure({id:uid(),...data});act(n,'acc','Акаунт додано ('+PLAT[n.platform].name+', '+n.username+')');S.accounts.push(n);S.sel=n.id;await seal()}
+    renderTabs();render();
+  });
+}
+$('addBtn').onclick=()=>accountForm(null);
+
+/* ===== ІМПОРТ / ЕКСПОРТ ===== */
+$('impBtn').onclick=()=>$('file').click();
+$('file').onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;e.target.value='';
+  try{
+    const txt=await f.text();let rows=[];
+    if(f.name.endsWith('.json')){
+      const j=JSON.parse(txt);
+      if(j.salt&&j.iv&&j.data){ // зашифрована резервна копія
+        const pw=prompt('Майстер-пароль цієї резервної копії:');if(!pw)return;
+        const salt=unb64(j.salt),key=await deriveKey(pw,salt);
+        rows=JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(j.iv)},key,unb64(j.data))));
+      }else rows=Array.isArray(j)?j:[];
+    }else{
+      rows=txt.split(/\r?\n/).filter(Boolean).map(l=>{const c=l.split(',').map(s=>s.trim());return{platform:c[0],username:c[1],email:c[2],password:c[3],notes:c[4]||''}});
+    }
+    let n=0;
+    rows.forEach(r=>{let p=String(r.platform||'').toLowerCase();if(p==='x')p='twitter';if(!PLAT[p]||!r.username||!r.email)return;
+      const na=ensure({id:uid(),platform:p,username:String(r.username),email:String(r.email),password:String(r.password||''),notes:String(r.notes||''),plans:r.plans,quests:r.quests,stats:r.stats,ytKey:r.ytKey,log:r.log,link:r.link});
+      act(na,'acc','Акаунт імпортовано з файлу');S.accounts.push(na);n++});
+    await seal();renderTabs();render();toast('Імпортовано: '+n);
+  }catch{toast('Не вдалося прочитати файл')}
+};
+$('expBtn').onclick=()=>{
+  const rec=localStorage.getItem(vaultKey());if(!rec)return;
+  const a=h('a',{href:URL.createObjectURL(new Blob([rec],{type:'application/json'})),download:'agromegaa-backup.json'});
+  document.body.append(a);a.click();a.remove();toast('Зашифровану копію збережено');
+};
+
+/* ===== ГАЙД ===== */
+const GUIDE=[
+{t:'1. З чого почати',b:[
+ 'agromegaa зберігає твої акаунти TikTok, Instagram, YouTube і Twitter (X) в одному захищеному місці й допомагає вести по кожному з них план, квести та статистику.',
+ ['<b>Увійди:</b> кнопкою Google або поштою (поле під кнопкою Google).','<b>Створи майстер-пароль</b> (мінімум 10 символів): він шифрує всі твої дані.','<b>Натисни «+ Додати акаунт»</b> і заповни форму.','Обери акаунт у списку зліва і користуйся вкладками: Огляд, Календар, Квести, Статистика, Журнал, ШІ-агент.']]},
+{t:'2. Вхід і майстер-пароль',b:[
+ ['<b>Google:</b> найнадійніший спосіб, пошту підтверджує сам Google.','<b>Пошта:</b> введи пошту й натисни «Продовжити» (новий вхід) або «Увійти» (якщо сховище вже є). Пошта не перевіряється листом, тому її захищає лише майстер-пароль.','<b>Одна пошта = одне сховище.</b> Якщо на цьому пристрої сховище створене через Google, вхід за тією самою поштою відкриє його теж, і навпаки. Якщо для пошти є кілька сховищ, сайт запропонує вибрати.','<b>Майстер-пароль</b> нікуди не надсилається й не зберігається. <b>Якщо його забути, поверни доступ за ключем відновлення</b> (його показано при створенні сховища, а нове можна створити в «🔐 Безпека»). Без ключа й резервної копії дані не відновити.','<b>🔒 Заблокувати</b> ховає дані до повторного введення пароля. Сайт блокується сам після 5 хвилин без дій.','<b>Вийти</b> повертає на екран входу.']]},
+{t:'3. Додавання й редагування акаунта',b:[
+ ['<b>Платформа:</b> TikTok, Instagram, YouTube або Twitter (X).','<b>Імʼя акаунта:</b> нік, як у посиланні на профіль (наприклад, <b>@mynick</b>). Можна вставити посилання на профіль, сайт сам витягне нік.','<b>Автовизначення платформи:</b> якщо вибрано YouTube, а ти вставив посилання на TikTok, сайт сам переключить платформу на TikTok. Працює за посиланням, а не за голим ніком.','<b>Пошта:</b> пошта, привʼязана до цього акаунта. Вона видна одразу в списку.','<b>Пароль:</b> необовʼязковий. Якщо акаунт створено через Google/Apple чи вхід за кодом, залиш порожнім.','<b>Посилання на профіль:</b> необовʼязкове, але рекомендоване. Саме воно відкривається кнопкою «Увійти в акаунт».','<b>Нотатки:</b> будь-що, наприклад «вхід через Google».'],
+ 'Змінити будь-що можна в Огляді кнопкою «Редагувати». Календар, квести, статистика й журнал при цьому зберігаються.']},
+{t:'4. Список акаунтів зліва',b:[
+ ['<b>Пошук</b> працює за іменем і поштою.','<b>Фільтри платформ</b> показують кількість акаунтів кожної платформи.','У картці акаунта видно пошту й прогрес плану на сьогодні («Сьогодні: 2/5»).','Кнопка <b>↗</b> у картці входить в акаунт одним кліком (див. наступний пункт).']]},
+{t:'5. Вхід в акаунт одним кліком',b:[
+ 'Кнопка ↗ у списку, «Увійти в акаунт» угорі та «Відкрити акаунт» в Огляді роблять одне й те саме: відкривають профіль у новій вкладці й копіюють пароль (буфер очищується через 20 секунд).',
+ ['Якщо ти вже увійшов у цей акаунт у браузері, потрапиш одразу в нього.','Якщо ні, платформа попросить увійти: встав скопійований пароль.','<b>З розширенням Chrome</b> сторінка входу відкривається, а логін і пароль вводяться самі. Капчу й код двоетапної перевірки введи сам.','Кнопка <b>«Сторінка входу»</b> відкриває форму входу платформи й теж копіює пароль.','<b>Профіль «не знайдено»?</b> Відкрий «Редагувати» і встав у «Посилання на профіль» точне посилання зі свого профілю. Для тимчасових ніків TikTok на кшталт user9358023884568 сайт відкриває сторінку входу сам.']]},
+{t:'6. Вкладка «Огляд»',b:[
+ ['Пошта акаунта з кнопкою «Копіювати».','Пароль: «Показати» відкриває його на екрані, «Копіювати» кладе в буфер.','Посилання на профіль і нотатки (якщо заповнені).','«Редагувати» змінює дані, «Видалити» стирає акаунт разом з планами, квестами, статистикою й журналом (є підтвердження).','Блок «Останні дії» показує 5 останніх змін.']]},
+{t:'7. Календар і плани',b:[
+ 'У кожного акаунта свій календар. Натисни день, щоб відкрити його план справа.',
+ ['<b>Додати завдання:</b> впиши текст (час за бажанням) і натисни Enter або «+».','<b>Виконати:</b> постав галочку. Шкала зверху показує «виконано X%, залишилось Y%».','<b>Редагувати:</b> клікни по тексту чи часу й зміни його, зміни зберігаються самі.','<b>Видалити:</b> кнопка ✕.','<b>Перенести невиконане</b> з попереднього дня: кнопка внизу, коли такі завдання є.','У клітинках місяця видно прогрес кожного дня, повністю виконані дні підсвічуються. Окрема шкала показує виконання всього місяця.','Стрілки ‹ › перемикають місяць, «Сьогодні» повертає на поточний день.']]},
+{t:'8. Квести',b:[
+ 'Квест, це ціль із числовим прогресом, наприклад «Набрати 1000 підписників» чи «Опублікувати 30 відео».',
+ ['<b>+ Новий квест:</b> назва, опис, мета (число), поточний прогрес, одиниця й дедлайн.','На картці: <b>−</b> і <b>+</b> міняють прогрес на 1, <b>✓</b> завершує, <b>✎</b> редагує, <b>🗑</b> видаляє.','Шкала показує відсоток виконання. Виконані квести йдуть вниз списку, прострочені підсвічуються червоним.']]},
+{t:'9. Статистика каналу',b:[
+ ['<b>+ Додати дані:</b> внеси підписників, перегляди, лайки, коментарі й публікації за дату. Запис за ту саму дату замінюється. Рекомендується вносити раз на день.','<b>Картки</b> показують останнє значення й зміну від попереднього запису. Залученість рахується як (лайки + коментарі) / перегляди.','<b>Графік:</b> вибери показник кнопками над ним (потрібно щонайменше 2 записи).','<b>Активність:</b> теплова карта виконаних завдань за 12 тижнів і серія днів поспіль.','<b>Історія записів:</b> таблиця, де записи можна редагувати (✎) й видаляти (✕).'],
+ 'TikTok, Instagram і Twitter не дають публічного доступу до статистики, тому там дані вносяться вручну. Для YouTube є кнопка «↻ Оновити з YouTube»: вона відкриває вхід Google (лише читання), перевіряє, що це потрібний канал, і підтягує підписників, перегляди, кількість відео, лайки й коментарі. Для цього в Google Cloud мають бути увімкнені YouTube Data API v3 та YouTube Analytics API, а твоя пошта додана в тестові користувачі.']},
+{t:'Плашки «Відео за сьогодні» і «Пости за сьогодні»',b:[
+ 'У календарі кожного акаунта є плашка щоденного лічильника: «Відео за сьогодні» для TikTok, Instagram і YouTube та «Пости за сьогодні» для Twitter (X).',
+ ['<b>+ відео / + пост</b> додає одиницю, <b>−</b> віднімає. Лічильник можна вести для будь-якого дня: обери день у календарі.','<b>Ціль на день</b> задається в полі на плашці. Шкала показує, скільки з цілі виконано.','У клітинках календаря видно кількість за день (зелена, якщо ціль виконано), під календарем є підсумок за місяць.','Лічильник видно у списку акаунтів ліворуч і в картках «Статистики».','Коли ти вносиш статистику (або тягнеш з YouTube) і кількість публікацій зросла, різниця сама додається в лічильник дня.']]},
+{t:'Розширення Chrome (автовхід)',b:[
+ 'Розширення відкриває сторінку входу, саме вводить логін і пароль і натискає «Увійти», коли ти тиснеш ↗ або «Увійти в акаунт». Заздалегідь відкривати вкладку не треба.',
+ ['<b>Встановлення:</b> розпакуй agromegaa-extension.zip, у Chrome відкрий chrome://extensions, увімкни «Режим розробника», натисни «Завантажити розпаковане» й обери папку.','<b>Підключення:</b> у налаштуваннях розширення встав адресу свого сайту й натисни «Підключити». Після оновлення сторінки сайту в шапці зʼявиться «🧩 Розширення: увімкнено».','<b>Логін:</b> у «Редагувати» є поле «Логін для входу». Якщо порожнє, використовується пошта.','Капчу й код двоетапної перевірки введи сам.','Пароль передається розширенню лише в момент натискання й лежить у памʼяті браузера до 3 хвилин.']]},
+{t:'Відновлення доступу',b:[
+ 'При створенні сховища сайт показує <b>ключ відновлення</b>. Збережи його поза цим пристроєм.',
+ ['<b>Забув майстер-пароль:</b> на екрані входу натисни «Забув майстер-пароль», введи ключ і придумай новий пароль. Дані збережуться.','<b>🔐 Безпека</b> у шапці: створення нового ключа (старий перестає працювати) і зміна майстер-пароля.','Для сховищ, створених раніше, створи ключ у «🔐 Безпека», поки ти ще пам\u02bcятаєш пароль.','Без ключа й без резервної копії забутий пароль відновити неможливо.']]},
+{t:'10. Журнал дій',b:[
+ 'У кожного акаунта ведеться журнал: сайт записує час і опис кожної зміни.',
+ ['<b>Акаунт:</b> створення, зміна платформи, імені, пошти, пароля (самі паролі в журнал не потрапляють), посилання й нотаток.','<b>Календар:</b> додані, змінені, виконані й видалені завдання.','<b>Квести:</b> створення, зміна прогресу, редагування, видалення.','<b>Статистика:</b> нові й змінені записи, оновлення з YouTube.','<b>Входи:</b> коли відкривали акаунт чи сторінку входу.','Журнал можна фільтрувати за категоріями й очищати. Зберігаються останні 300 записів.']]},
+{t:'11. ШІ-агент (заготовка)',b:[
+ 'Вкладка підготовлена під підключення ШІ-агента. Тут вже є контекст акаунта (план, квести, статистика, останні дії; пароль не входить) і кнопка «Копіювати контекст».',
+ 'Для майбутнього агента в коді є інтерфейс window.agromegaa: getContext, addTask, addQuest, addStat. Усе, що агент зробить, записується в журнал з позначкою «ШІ-агент».']},
+{t:'12. Резервні копії й перенесення на інший пристрій',b:[
+ 'Дані зберігаються в браузері, тому сховище на кожному пристрої й у кожному браузері окреме.',
+ ['<b>⬇ Резервна копія:</b> зберігає зашифрований файл agromegaa-backup.json (потрібен той самий майстер-пароль).','<b>Перенесення:</b> на новому пристрої увійди тією самою поштою, натисни «Увійти» і «Відновити з резервної копії», потім введи майстер-пароль.','<b>⬆ Імпорт:</b> додає акаунти з файлу копії, JSON або CSV (рядок: платформа,імʼя,пошта,пароль,нотатки).','Роби копію регулярно, особливо перед очищенням браузера.']]},
+{t:'13. Безпека',b:[
+ ['Усі акаунти шифруються в браузері (AES-256, ключ із майстер-пароля), на сервер нічого не надсилається.','Інший користувач на цьому ж сайті не побачить твоїх акаунтів: у нього своє сховище й свій пароль.','Очищення даних сайту в браузері видаляє сховище. Без резервної копії воно не відновлюється.','Не відкривай сайт на чужих пристроях, а на спільних обовʼязково тисни «Вийти».']]},
+{t:'14. Часті проблеми',b:[
+ ['<b>«Обліковий запис не знайдено».</b> На цьому пристрої немає сховища для цієї пошти. Перевір пошту, спробуй вхід через Google, або відновись із резервної копії. Сайт підкаже збережені тут пошти в замаскованому вигляді.','<b>«Невірний пароль».</b> Перевір розкладку й великі літери. Після невдалих спроб є затримка.','<b>Профіль не відкривається.</b> Додай точне посилання на профіль у «Редагувати».','<b>Кнопка Google не зʼявляється.</b> Вимкни блокувальники реклами для сайту й онови сторінку.','<b>Помилка «↻ З YouTube».</b> Перевір API-ключ, що увімкнено YouTube Data API v3 і що імʼя акаунта збігається з @handle каналу.','<b>Дані зникли.</b> Ймовірно, відкрито інший браузер чи адресу сайту. Знайди потрібний браузер або відновись із копії.']]}
+];
+function openGuide(){
+  const root=$('modalRoot'),close=()=>root.replaceChildren();
+  const secs=GUIDE.map((s,i)=>{
+    const d=h('details',{class:'gd',...(i===0?{open:''}:{})},h('summary',{},s.t));
+    const body=h('div',{class:'gb'});
+    s.b.forEach(x=>{
+      if(Array.isArray(x)){const ul=h('ul',{});x.forEach(li=>{const l=h('li',{});setRich(l,li);ul.append(l)});body.append(ul)}
+      else{const p=h('p',{});setRich(p,x);body.append(p)}
+    });
+    d.append(body);return d;
+  });
+  let all=false;
+  const tg=h('button',{class:'btn sm',onclick:e=>{all=!all;root.querySelectorAll('details.gd').forEach(d=>{d.open=all});e.target.textContent=all?'Згорнути все':'Розгорнути все'}},'Розгорнути все');
+  root.replaceChildren(h('div',{class:'modal',onclick:e=>{if(e.target.classList.contains('modal'))close()}},h('div',{class:'card wide'},
+    h('div',{class:'shead'},h('h1',{style:'margin:0'},'Гайд по сайту'),h('div',{class:'sp'}),tg,h('button',{class:'btn sm',onclick:close},'✕')),
+    h('p',{style:'margin:0 0 14px'},'Інструкція по кожному пункту сайту. Натисни розділ, щоб розгорнути.'),
+    ...secs)));
+}
+// Безпечний розбір тексту: лише <b>…</b>, без innerHTML
+function setRich(el,str){String(str).split(/(<b>.*?<\/b>)/g).forEach(part=>{const m=part.match(/^<b>(.*)<\/b>$/);if(m)el.append(h('b',{},m[1]));else if(part)el.append(document.createTextNode(part))})}
+$('guideBtn').onclick=openGuide;$('guideAuth').onclick=openGuide;
+
+/* ===== СТАРТ ===== */
+pingExt();setTimeout(pingExt,800);
+(async()=>{
+  await initAuth();
+  const u=sessionStorage.getItem('agro:user');
+  if(u){try{S.user=JSON.parse(u);goUnlock();return}catch{}}
+  show('auth');
+})();
+</script>
+</body>
+</html>
